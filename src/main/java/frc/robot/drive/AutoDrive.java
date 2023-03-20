@@ -91,7 +91,7 @@ public class AutoDrive extends CommandBase {
         }
         Pose2d pose = drive.getOdometryPose();
         Pose2d setPose = params.targetPose;
-        Rotation2d rot = drive.getRobotPitch();
+        Rotation2d rot = drive.getRobotYaw();
 
         double xVal = 0;
         double yVal = 0;

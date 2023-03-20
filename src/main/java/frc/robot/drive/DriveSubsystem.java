@@ -30,9 +30,9 @@ import frc.robot.Constants.DriveConstants;
 
 public class DriveSubsystem extends SubsystemBase {
 
-    private final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
+    public final SwerveDriveKinematics kinematics = new SwerveDriveKinematics(
             Constants.DriveConstants.WHEEL_LOCATIONS);
-    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(kinematics, getRobotPitch(),
+    private final SwerveDriveOdometry odometer = new SwerveDriveOdometry(kinematics, getRobotYaw(),
             getModulePositions());
 
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("157/Swerve");
@@ -53,6 +53,7 @@ public class DriveSubsystem extends SubsystemBase {
     };
 
     public DriveSubsystem() {
+        pidr.enableContinuousInput(-180, 180);
         final var resetCommand = runOnce(this::resetGyro).ignoringDisable(true);
         SmartDashboard.putData("Reset Yaw", resetCommand);
     }
@@ -84,7 +85,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void driveDistanceWithRotation(double desiredAngle, double xSpeed, double ySpeed) {
         set(new ChassisSpeeds(xSpeed, ySpeed,
-                pidr.calculate(getRobotPitch().getDegrees(), desiredAngle)));
+                pidr.calculate(getRobotYaw().getDegrees(), desiredAngle)));
     }
 
     // TODO test this please, it might just work or just need a few negatives. it
@@ -92,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void driveDistanceOdometer(double xPos, double yPos, double angle) {
         var pose = odometer.getPoseMeters();
         set(new ChassisSpeeds(pidx.calculate(pose.getX(), xPos), pidy.calculate(pose.getY(), yPos),
-                pidr.calculate(getRobotPitch().getDegrees(), angle)));
+                pidr.calculate(getRobotYaw().getDegrees(), angle)));
     }
 
     public Command driveToPosWithAngleOdometry(double xPos, double yPos, double angle, double tolerance) {
@@ -108,6 +109,12 @@ public class DriveSubsystem extends SubsystemBase {
 
         for (var i = 0; i < states.length; i++) {
             swervePods[i].set(states[i]);
+        }
+    }
+
+    public void setRaw(final SwerveModuleState[] inputSpeeds) {
+        for (var i = 0; i < inputSpeeds.length; i++) {
+            swervePods[i].set(inputSpeeds[i]);
         }
     }
 
@@ -128,6 +135,11 @@ public class DriveSubsystem extends SubsystemBase {
     private final AHRS gyro = new AHRS(SPI.Port.kMXP);
     private final NetworkTable gyroTable = NetworkTableInstance.getDefault().getTable("157/Gyro");
 
+    /**
+     * get the angle that the robot is facing
+     *
+     * @return the angle, between -180 and 180, that the robot is facing.
+     */
     public Rotation2d getRobotYaw() {
         return Rotation2d.fromDegrees(((-gyro.getYaw() + 180 + gyroOffset) % 360) - 180);
     }
@@ -137,7 +149,7 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public double getRawRobotPitch() {
-        return gyro.getRoll();
+        return gyro.getPitch();
     }
 
     public Rotation2d getRobotRoll() {
@@ -158,7 +170,7 @@ public class DriveSubsystem extends SubsystemBase {
         gyroTable.getEntry("Pitch").setDouble(gyro.getPitch());
         gyroTable.getEntry("Roll").setDouble(gyro.getRoll());
         table.getEntry("Raw Drive Position").setDouble(getRawDrivePosition());
-        odometer.update(getRobotPitch(), getModulePositions());
+        odometer.update(getRobotYaw(), getModulePositions());
     }
 
     public void resetDrivePosition() {

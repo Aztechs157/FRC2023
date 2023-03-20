@@ -35,6 +35,7 @@ public final class Constants {
     }
 
     public static class DriveConstants {
+
         public static final IdleMode DRIVE_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode ANGLE_IDLE_MODE = IdleMode.kCoast;
 
@@ -71,6 +72,9 @@ public final class Constants {
         public static final double TURN_ACCURACY_DEG = 20;
         public static final double DRIVE_ACCURACY = 20;
         public static final double BALANCE_ACCURACY_DEG = 2.5;
+        public static final double MAX_SPEED = 3.0;
+        public static final double MAX_ACCELL = 1.0;
+
     }
 
     public static class IntakeConstants {
