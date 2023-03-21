@@ -21,6 +21,7 @@ import frc.robot.lift.CarriageSubsystem;
 import frc.robot.lift.ElevatorSubsystem;
 import frc.robot.statemachines.SubsystemGroup;
 
+import java.nio.file.Path;
 import java.util.List;
 
 import edu.wpi.first.cameraserver.CameraServer;
@@ -32,8 +33,10 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.math.trajectory.TrajectoryConfig;
 import edu.wpi.first.math.trajectory.TrajectoryGenerator;
+import edu.wpi.first.math.trajectory.TrajectoryUtil;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.Filesystem;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -284,6 +287,17 @@ public class RobotContainer {
         pidr.enableContinuousInput(-Math.PI, Math.PI);
         return new SwerveControllerCommand(traj, driveSubsystem::getOdometryPose, driveSubsystem.kinematics,
                 driveSubsystem.pidx, driveSubsystem.pidy, pidr, driveSubsystem::setRaw, driveSubsystem);
+    }
+
+    public Command importTrajFollower() {
+        try {
+
+            String trajectoryJSON = "Paths/unnamed.wpilib.json";
+            Path trajectoryPath = Filesystem.getDeployDirectory().toPath().resolve(trajectoryJSON);
+            return trajectoryFollower(TrajectoryUtil.fromPathweaverJson(trajectoryPath));
+        } catch (Exception e) {
+            return trajectoryFollower();
+        }
     }
 
     /*

@@ -24,6 +24,10 @@ public class SwervePod {
     private final CANCoder angleEncoder;
     private final NetworkTable table;
 
+    public void setDistancePerRotation(double distancePerRotation) {
+        driveMotor.getEncoder().setPositionConversionFactor(distancePerRotation); // this is in meters
+    }
+
     public SwervePod(final Config config, final NetworkTable table) {
         this.table = table;
         driveMotor = new CANSparkMax(config.driveMotorId, MotorType.kBrushless);

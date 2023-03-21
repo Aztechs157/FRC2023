@@ -54,6 +54,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public DriveSubsystem() {
         pidr.enableContinuousInput(-180, 180);
+        setAllEncoderMultipliers(0.03921201641325); // distance in meters for 1 rotation of the wheel
         final var resetCommand = runOnce(this::resetGyro).ignoringDisable(true);
         SmartDashboard.putData("Reset Yaw", resetCommand);
     }
@@ -61,6 +62,12 @@ public class DriveSubsystem extends SubsystemBase {
     public void resetGyro() {
         gyro.zeroYaw();
         addGyroOffset(0);
+    }
+
+    public void setAllEncoderMultipliers(double distancePerRotation) {
+        for (SwervePod swervePod : swervePods) {
+            swervePod.setDistancePerRotation(distancePerRotation);
+        }
     }
 
     public void resetDisplacement() {

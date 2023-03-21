@@ -72,7 +72,7 @@ public final class Constants {
         public static final double TURN_ACCURACY_DEG = 20;
         public static final double DRIVE_ACCURACY = 20;
         public static final double BALANCE_ACCURACY_DEG = 2.5;
-        public static final double MAX_SPEED = 3.0;
+        public static final double MAX_SPEED = 2.596896;
         public static final double MAX_ACCELL = 1.0;
 
     }
