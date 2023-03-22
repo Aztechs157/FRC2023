@@ -51,7 +51,10 @@ public class ElbowSubsystem extends SubsystemBase {
     }
 
     public double getElbowRotationPosition() {
-        return NumberUtil.ticksToDegs(elbowAbsEncoder.getPeriod()) + 100;
+        // TODO: get rid of the +100 once the elbow encoder is in a better position
+        double rawPos = NumberUtil.ticksToDegs(elbowAbsEncoder.getPeriod());
+        rawPos = rawPos < 120 ? rawPos + 360 : rawPos;
+        return rawPos;
     }
 
     public void rotateElbow(final double speed) {

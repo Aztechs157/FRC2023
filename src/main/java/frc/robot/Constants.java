@@ -112,7 +112,9 @@ public final class Constants {
         public static final int SERVO_ID = 1;
 
         public static final Range OLD_LIMITS = new Range(60, 230);
-        public static final Range ROTATE_LIMITS = new Range(40, 269); // 162 fully down, 336 fully up
+
+        // TODO: this should be changed to a range within 0-360 after our arm is fixed
+        public static final Range ROTATE_LIMITS = new Range(270, 380); // 162 fully down, 336 fully up
 
         public static final double START_POS = toNewRange(230, OLD_LIMITS, ROTATE_LIMITS); // 230;
         public static final double LOW_POS = toNewRange(60, OLD_LIMITS, ROTATE_LIMITS);// 60;
