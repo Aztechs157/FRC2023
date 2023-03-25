@@ -42,23 +42,19 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command coneMode(final DriverInputs inputs) {
         return new InstantCommand(() -> {
             lights.setClimb(Color.kGold, Color.kBlack, 3, 2, 2);
-        }).andThen(runEnd(() -> {
-            runIntake(inputs);
-        }, () -> {
+        }).andThen(runIntake(inputs).until(this::getSensor)).andThen(() -> {
             setSolenoid(Value.kReverse);
             lights.setSolid(Color.kGold);
-        }).until(this::getSensor));
+        });
     }
 
     public Command cubeMode(final DriverInputs inputs) {
         return runOnce(() -> {
             lights.setClimb(Color.kPurple, Color.kBlack, 3, 2, 2);
-        }).andThen(runEnd(() -> {
-
-            runIntake(inputs);
-        }, () -> {
+        }).andThen(runIntake(inputs).until(this::getSensor)).andThen(() -> {
             lights.setSolid(Color.kPurple);
-        }).until(this::getSensor));
+        });
+
     }
 
     public Command runIntake(final DriverInputs inputs) {
@@ -67,7 +63,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
             final var newSpeed = Math.abs(speed) < 0.1 ? 0.1 : speed;
             motor.set(-newSpeed);
-        }, () -> motor.set(0.1);
+        }, () -> {
+            motor.set(0.1);
+        });
     }
 
     public Command runMotor(final double speed) {

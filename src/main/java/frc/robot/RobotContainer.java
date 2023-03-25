@@ -100,8 +100,8 @@ public class RobotContainer {
                 .whenPressed(intakeSubsystem.setSolenoidWithLights(DoubleSolenoid.Value.kForward));
         driverInputs.button(DriverInputs.setIntakeSolenoidBackward)
                 .whenPressed(intakeSubsystem.setSolenoidWithLights(DoubleSolenoid.Value.kReverse));
-        Command coneCommand = intakeSubsystem.coneMode();
-        Command cubeCommand = intakeSubsystem.cubeMode();
+        Command coneCommand = intakeSubsystem.coneMode(driverInputs);
+        Command cubeCommand = intakeSubsystem.cubeMode(driverInputs);
         driverInputs.button(DriverInputs.ConeIntake).whenPressed(coneCommand);
         driverInputs.button(DriverInputs.cubeIntake).whenPressed(cubeCommand);
         driverInputs.button(DriverInputs.CancelMode).whenPressed(new InstantCommand(() -> {
