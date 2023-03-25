@@ -65,17 +65,22 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command runIntake(final DriverInputs inputs) {
         return runEnd(() -> {
             var speed = inputs.axis(DriverInputs.intakeSpeed).get();
+            var stopSpeed = isOpen ? stoppedSpeed : 0;
 
-            final var newSpeed = Math.abs(speed) < stoppedSpeed ? stoppedSpeed : speed;
+            final var newSpeed = Math.abs(speed) < stopSpeed ? stopSpeed : speed;
             motor.set(-newSpeed);
         }, () -> {
-            motor.set(stoppedSpeed);
+            motor.set(0);
         });
     }
 
     public Command runMotor(final double speed) {
-        final var newSpeed = Math.abs(speed) < stoppedSpeed ? stoppedSpeed : speed;
-        return runEnd(() -> motor.set(newSpeed), () -> motor.set(stoppedSpeed));
+        return runEnd(() -> {
+
+            var stopSpeed = isOpen ? stoppedSpeed : 0;
+            final var newSpeed = Math.abs(speed) < stopSpeed ? stopSpeed : speed;
+            motor.set(newSpeed);
+        }, () -> motor.set(0));
     }
 
     public Command intake(final double speed) {
@@ -95,6 +100,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public void setSolenoid(final DoubleSolenoid.Value val) {
+        isOpen = val == DoubleSolenoid.Value.kForward;
         solenoid.set(val);
     }
 
