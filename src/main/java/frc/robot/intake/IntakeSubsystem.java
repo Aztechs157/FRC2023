@@ -47,6 +47,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command coneMode(final DriverInputs inputs) {
         return new InstantCommand(() -> {
             lights.setClimb(Color.kGold, Color.kBlack, 3, 2, 2);
+            setSolenoid(Value.kForward);
         }).andThen(runIntake(inputs).until(this::getSensor)).andThen(() -> {
             setSolenoid(Value.kReverse);
             lights.setSolid(Color.kGold);
@@ -56,6 +57,7 @@ public class IntakeSubsystem extends SubsystemBase {
     public Command cubeMode(final DriverInputs inputs) {
         return runOnce(() -> {
             lights.setClimb(Color.kPurple, Color.kBlack, 3, 2, 2);
+            setSolenoid(Value.kForward);
         }).andThen(runIntake(inputs).until(this::getSensor)).andThen(() -> {
             lights.setSolid(Color.kPurple);
         });
