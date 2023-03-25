@@ -38,13 +38,15 @@ public class IntakeSubsystem extends SubsystemBase {
 
     public Command runIntake(final DriverInputs inputs) {
         return runEnd(() -> {
-            final var speed = inputs.axis(DriverInputs.intakeSpeed).get();
+            var speed = inputs.axis(DriverInputs.intakeSpeed).get();
+
             motor.set(-speed);
         }, () -> motor.set(0));
     }
 
     public Command runMotor(final double speed) {
-        return runEnd(() -> motor.set(speed), () -> motor.set(0));
+        final var newSpeed = Math.abs(speed) < 0.1 ? 0.1 : speed;
+        return runEnd(() -> motor.set(newSpeed), () -> motor.set(0.1));
     }
 
     public Command intake(final double speed) {
