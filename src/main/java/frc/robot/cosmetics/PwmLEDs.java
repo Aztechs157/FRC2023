@@ -24,6 +24,11 @@ public class PwmLEDs extends SubsystemBase {
     private double cycleLength = 0.0;
     private double duration = 0.0;
 
+    private double mp1 = 90.0;
+    private double mp2 = 60.0;
+    private double mp3 = 30.0;
+    private double mpTolerance = 0.25;
+
     private Mode lightMode = Mode.SOLID;
 
     public void setLightMode(Mode lightMode) {
@@ -158,6 +163,22 @@ public class PwmLEDs extends SubsystemBase {
     @Override
     public void periodic() {
         // This method will be called once per scheduler run
+        if (Math.abs(Timer.getMatchTime() - mp1) <= mpTolerance) {
+            solid(Color.kBlue);
+            lights.setData(buffer);
+            return;
+        }
+        if (Math.abs(Timer.getMatchTime() - mp2) <= mpTolerance) {
+            solid(Color.kGreen);
+            lights.setData(buffer);
+            return;
+        }
+        if (Math.abs(Timer.getMatchTime() - mp3) <= mpTolerance) {
+            solid(Color.kRed);
+            lights.setData(buffer);
+            return;
+        }
+
         switch (lightMode) {
             case SOLID:
                 solid(color1);

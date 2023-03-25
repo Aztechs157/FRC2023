@@ -65,10 +65,15 @@ public class Robot extends TimedRobot {
     public void disabledInit() {
         Color color1 = Color.kBlue;
         Color color2 = Color.kGold;
+        if (DriverStation.isEStopped()) {
+            color1 = Color.kBeige;
+            color2 = Color.kPowderBlue;
+        }
         if (!DriverStation.isFMSAttached()) {
             color1 = PwmLEDs.dimColor(color1, 0.25);
             color2 = PwmLEDs.dimColor(color2, 0.25);
         }
+
         m_robotContainer.lightsSubsystem.setWave(color1, color2, 10, 1);
     }
 
