@@ -124,6 +124,8 @@ public class RobotContainer {
         chooser.addOption("leaveCommunityThenEngage", leaveCommunityThenEngage());
         chooser.addOption("everythingIsBrokenDoNothing", new InstantCommand(() -> System.out.println(":(")));
         chooser.addOption("twoPiecethenEngage", TwoPieceThenEngage());
+        chooser.addOption("twoPieceWithOdometry", TwoPieceWithOdometry());
+        chooser.addOption("twoPieceThenEngageWithOdometry", TwoPieceThenEngageWithOdometry());
     }
 
     /**
