@@ -44,7 +44,7 @@ public class DriverInputs extends DynamicLayout {
     private static final NetworkTableEntry entry = NetworkTableInstance.getDefault().getEntry("157/Drive/StickEnabled");
 
     public DriverInputs() {
-        super(() -> true ? flightStickLayout() : dualLogitechLayout());
+        super(() -> true ? doubleXBOXLayout() : flightStickLayout());
 
         entry.setDefaultBoolean(false);
         entry.setPersistent();
@@ -116,6 +116,48 @@ public class DriverInputs extends DynamicLayout {
         layout.assign(ConeIntake, driver.button11);
         layout.assign(cubeIntake, driver.button12);
         layout.assign(CancelMode, driver.button10);
+
+        layout.assign(runIntakeMotorIn, operator.rightTriggerHeld.scaledBy(.1));
+        layout.assign(runIntakeMotorOut, operator.leftTriggerHeld.scaledBy(.1));
+        layout.assign(setIntakeSolenoidForward, operator.rightBumper);
+        layout.assign(setIntakeSolenoidBackward, operator.leftBumper);
+        layout.assign(lowPosition, operator.x);
+        layout.assign(midPosition, operator.a);
+        layout.assign(highPosition, operator.y);
+        layout.assign(loadingPosition, operator.b);
+        layout.assign(startPosition, operator.start);
+
+        layout.assign(rotateWrist, operator.rightStickY.map(deadzone::apply).scaledBy(-0.5));
+        layout.assign(rotateElbow, operator.leftStickY.map(deadzone::apply).scaledBy(-0.5));
+
+        layout.assign(elevator, operator.pov.y.scaledBy(-0.25));
+        layout.assign(carriage, operator.pov.x.scaledBy(0.75));
+
+        return layout;
+    }
+
+    private static Layout doubleXBOXLayout() {
+        final var layout = new MapLayout("driver xbox, operator xbox");
+        final var driver = new XboxOne(0);
+        final var operator = new XboxOne(1);
+
+        final var speedModifier = 0.80;
+
+        layout.assign(driveSpeedX, driver.leftStickX.map(deadzone::apply).scaledBy(speedModifier));
+        layout.assign(driveSpeedY, driver.leftStickY.map(deadzone::apply).scaledBy(speedModifier));
+        layout.assign(driveRotation, driver.rightStickX.map(deadzone::apply).scaledBy(speedModifier)
+                .scaledBy(maxRotationPerSecond.getDegrees()));
+        layout.assign(autoBalance, driver.a);
+        layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
+            double driverSpeed = driver.leftBumper.get() ? 1 : (driver.rightBumper.get() ? -1 : 0);
+            if (Math.abs(operator.combinedTriggersHeld.get()) > Math.abs(driverSpeed)) {
+                return operator.combinedTriggersHeld.get();
+            }
+            return driverSpeed;
+        }));
+        layout.assign(ConeIntake, driver.x);
+        layout.assign(cubeIntake, driver.y);
+        layout.assign(CancelMode, driver.b);
 
         layout.assign(runIntakeMotorIn, operator.rightTriggerHeld.scaledBy(.1));
         layout.assign(runIntakeMotorOut, operator.leftTriggerHeld.scaledBy(.1));
