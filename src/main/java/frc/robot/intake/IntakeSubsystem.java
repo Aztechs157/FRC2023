@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
@@ -34,9 +35,13 @@ public class IntakeSubsystem extends SubsystemBase {
     private boolean isOpen = false;
     private final PwmLEDs lights;
 
+    private double stoppedSpeed = 0.35;
+
     public IntakeSubsystem(PwmLEDs lights) {
         airCompressor.enableDigital();
         this.lights = lights;
+        final var tab = Shuffleboard.getTab("Encoder Debug");
+        tab.addBoolean("intake sensor", this::getSensor);
     }
 
     public Command coneMode(final DriverInputs inputs) {
@@ -61,16 +66,16 @@ public class IntakeSubsystem extends SubsystemBase {
         return runEnd(() -> {
             var speed = inputs.axis(DriverInputs.intakeSpeed).get();
 
-            final var newSpeed = Math.abs(speed) < 0.35 ? 0.35 : speed;
+            final var newSpeed = Math.abs(speed) < stoppedSpeed ? stoppedSpeed : speed;
             motor.set(-newSpeed);
         }, () -> {
-            motor.set(0.35);
+            motor.set(stoppedSpeed);
         });
     }
 
     public Command runMotor(final double speed) {
-        final var newSpeed = Math.abs(speed) < 0.35 ? 0.35 : speed;
-        return runEnd(() -> motor.set(newSpeed), () -> motor.set(0.35));
+        final var newSpeed = Math.abs(speed) < stoppedSpeed ? stoppedSpeed : speed;
+        return runEnd(() -> motor.set(newSpeed), () -> motor.set(stoppedSpeed));
     }
 
     public Command intake(final double speed) {
@@ -94,7 +99,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private boolean getSensor() {
-        return !intakeSensor.get();
+        return intakeSensor.get();
     }
 
     // private final NetworkTableEntry sensorEntry =
