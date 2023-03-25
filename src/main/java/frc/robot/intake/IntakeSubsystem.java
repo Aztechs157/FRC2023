@@ -105,7 +105,7 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     private boolean getSensor() {
-        return intakeSensor.get();
+        return !intakeSensor.get();
     }
 
     // private final NetworkTableEntry sensorEntry =
