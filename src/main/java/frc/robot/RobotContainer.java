@@ -245,25 +245,26 @@ public class RobotContainer {
 
     public Command TwoPieceWithOdometry() {
         double allySideMultiplier = DriverStation.getAlliance().compareTo(Alliance.Red) == 0 ? 1 : -1;
-        return new SequentialCommandGroup(intakeSubsystem.intake(-1).withTimeout(0.75),
+        return new SequentialCommandGroup(//intakeSubsystem.intake(-1).withTimeout(0.75),
                 new ParallelRaceGroup(
-                        group.lowPosCommand(1),
-                        intakeSubsystem.intake(1),
+                        //group.lowPosCommand(1),
+                        //intakeSubsystem.intake(1),
                         new AutoDrive(driveSubsystem,
                                 new AutoDriveLineBuilder(5, 0 * allySideMultiplier, 0 * allySideMultiplier)
                                         .holdRotTillRotStarts(true)
                                         .startRotAtX(3.25)
                                         .useSlewXY(true)
                                         .xTolerance(0.05))),
-                new ParallelRaceGroup(group.startingPosCommand(1),
-                        intakeSubsystem.intake(0.1),
+                new ParallelRaceGroup(//group.startingPosCommand(1),
+                        //intakeSubsystem.intake(0.1),
                         new AutoDrive(driveSubsystem,
                                 new AutoDriveLineBuilder(0, 0 * allySideMultiplier, 180 * allySideMultiplier)
                                         .xTolerance(0.05)
                                         .useSlewAll(true))),
-                group.highPosCommand(1).withTimeout(1.3),
-                intakeSubsystem.intake(-1).withTimeout(0.5),
-                group.startingPosCommand(1));
+                //group.highPosCommand(1).withTimeout(1.3),
+                //intakeSubsystem.intake(-1).withTimeout(0.5),
+                //group.startingPosCommand(1)
+                );
     }
 
     public Command TwoPieceThenEngageWithOdometry() {
