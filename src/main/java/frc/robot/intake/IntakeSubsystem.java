@@ -35,7 +35,7 @@ public class IntakeSubsystem extends SubsystemBase {
     private boolean isOpen = false;
     private final PwmLEDs lights;
 
-    private double stoppedSpeed = 0.35;
+    private double stoppedSpeed = 0.0;
 
     public IntakeSubsystem(PwmLEDs lights) {
         airCompressor.enableDigital();
