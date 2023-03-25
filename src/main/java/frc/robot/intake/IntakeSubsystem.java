@@ -11,9 +11,12 @@ import edu.wpi.first.wpilibj.Compressor;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import frc.robot.Constants.IntakeConstants;
 import frc.robot.cosmetics.PwmLEDs;
 import frc.robot.input.DriverInputs;
@@ -36,6 +39,28 @@ public class IntakeSubsystem extends SubsystemBase {
         this.lights = lights;
     }
 
+    public Command coneMode(final DriverInputs inputs) {
+        return new InstantCommand(() -> {
+            lights.setClimb(Color.kGold, Color.kBlack, 3, 2, 2);
+        }).andThen(runEnd(() -> {
+            runIntake(inputs);
+        }, () -> {
+            setSolenoid(Value.kReverse);
+            lights.setSolid(Color.kGold);
+        }).until(this::getSensor));
+    }
+
+    public Command cubeMode(final DriverInputs inputs) {
+        return runOnce(() -> {
+            lights.setClimb(Color.kPurple, Color.kBlack, 3, 2, 2);
+        }).andThen(runEnd(() -> {
+
+            runIntake(inputs);
+        }, () -> {
+            lights.setSolid(Color.kPurple);
+        }).until(this::getSensor));
+    }
+
     public Command runIntake(final DriverInputs inputs) {
         return runEnd(() -> {
             var speed = inputs.axis(DriverInputs.intakeSpeed).get();
@@ -54,7 +79,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return runMotor(isOpen ? speed : speed).until(this::getSensor);
     }
 
-    public Command setSolenoid(final DoubleSolenoid.Value value) {
+    public Command setSolenoidWithLights(final DoubleSolenoid.Value value) {
         return runOnce(() -> {
             solenoid.set(value);
             isOpen = value == DoubleSolenoid.Value.kForward;
@@ -64,6 +89,10 @@ public class IntakeSubsystem extends SubsystemBase {
                 lights.setSolid(Color.kYellow);
             }
         });
+    }
+
+    public void setSolenoid(final DoubleSolenoid.Value val) {
+        solenoid.set(val);
     }
 
     private boolean getSensor() {

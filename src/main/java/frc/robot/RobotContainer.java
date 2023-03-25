@@ -19,6 +19,9 @@ import frc.robot.wrist.WristSubsystem;
 import frc.robot.lift.CarriageSubsystem;
 import frc.robot.lift.ElevatorSubsystem;
 import frc.robot.statemachines.SubsystemGroup;
+
+import java.time.Instant;
+
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -94,9 +97,17 @@ public class RobotContainer {
         driverInputs.button(DriverInputs.highPosition).whileHeld(group.highPosCommand(1));
         driverInputs.button(DriverInputs.startPosition).whileHeld(group.startingPosCommand(1));
         driverInputs.button(DriverInputs.setIntakeSolenoidForward)
-                .whenPressed(intakeSubsystem.setSolenoid(DoubleSolenoid.Value.kForward));
+                .whenPressed(intakeSubsystem.setSolenoidWithLights(DoubleSolenoid.Value.kForward));
         driverInputs.button(DriverInputs.setIntakeSolenoidBackward)
-                .whenPressed(intakeSubsystem.setSolenoid(DoubleSolenoid.Value.kReverse));
+                .whenPressed(intakeSubsystem.setSolenoidWithLights(DoubleSolenoid.Value.kReverse));
+        Command coneCommand = intakeSubsystem.coneMode();
+        Command cubeCommand = intakeSubsystem.cubeMode();
+        driverInputs.button(DriverInputs.ConeIntake).whenPressed(coneCommand);
+        driverInputs.button(DriverInputs.cubeIntake).whenPressed(cubeCommand);
+        driverInputs.button(DriverInputs.CancelMode).whenPressed(new InstantCommand(() -> {
+            coneCommand.cancel();
+            cubeCommand.cancel();
+        }));
     }
 
     public SendableChooser<Command> chooser = new SendableChooser<>();

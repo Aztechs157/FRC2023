@@ -29,6 +29,9 @@ public class DriverInputs extends DynamicLayout {
     public static final Button.Key loadingPosition = new Button.Key("Set to loading position");
     public static final Button.Key startPosition = new Button.Key("Set to start position");
     public static final Button.Key autoBalance = new Button.Key("Run the balance on platform command");
+    public static final Button.Key ConeIntake = new Button.Key("set the robot to cone intake mode");
+    public static final Button.Key cubeIntake = new Button.Key("set the robot to cube intake mode");
+    public static final Button.Key CancelMode = new Button.Key("cancel the current mode, revert to old system.");
 
     public static final Axis.Key driveSpeedX = new Axis.Key("Drive Speed X");
     public static final Axis.Key driveSpeedY = new Axis.Key("Drive Speed Y");
@@ -110,6 +113,9 @@ public class DriverInputs extends DynamicLayout {
             }
             return driverSpeed;
         }));
+        layout.assign(ConeIntake, driver.button11);
+        layout.assign(cubeIntake, driver.button12);
+        layout.assign(CancelMode, driver.button10);
 
         layout.assign(runIntakeMotorIn, operator.rightTriggerHeld.scaledBy(.1));
         layout.assign(runIntakeMotorOut, operator.leftTriggerHeld.scaledBy(.1));
