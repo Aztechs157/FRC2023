@@ -79,11 +79,12 @@ public class AutoDrive extends CommandBase {
     }
 
     // caps the magnitude of val to cap
-    public double capVal(double val, double cap) {
+    public double capVal(double val, double cap, double min) {
         double retval = val;
         double tempCap = Math.abs(cap);
         retval = retval > tempCap ? tempCap : retval;
         retval = retval < -tempCap ? -tempCap : retval;
+        retval = Math.abs(retval) < min ? 0 : retval;
         return retval;
     }
 
@@ -146,9 +147,9 @@ public class AutoDrive extends CommandBase {
         }
 
         // caps values to max speed
-        xVal = capVal(xVal, params.maxXSpeed);
-        yVal = capVal(yVal, params.maxYSpeed);
-        rotVal = capVal(rotVal, params.maxRotSpeed);
+        xVal = capVal(xVal, params.maxXSpeed, params.minX);
+        yVal = capVal(yVal, params.maxYSpeed, params.minY);
+        rotVal = capVal(rotVal, params.maxRotSpeed, params.minRot);
 
         System.out.println("xvcal: " + xVal + "\nyVal: " + yVal + "\nrotVal: " + rotVal);
 
