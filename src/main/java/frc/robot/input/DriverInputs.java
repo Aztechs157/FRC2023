@@ -154,9 +154,8 @@ public class DriverInputs extends DynamicLayout {
             }
             return driver.combinedTriggersHeld.get();
         }));
-        layout.assign(ConeIntake, driver.x);
-        layout.assign(cubeIntake, driver.y);
-        layout.assign(CancelMode, driver.b);
+        layout.assign(ConeIntake, driver.rightBumper);
+        layout.assign(cubeIntake, driver.leftBumper);
 
         layout.assign(runIntakeMotorIn, operator.rightTriggerHeld.scaledBy(.1));
         layout.assign(runIntakeMotorOut, operator.leftTriggerHeld.scaledBy(.1));
