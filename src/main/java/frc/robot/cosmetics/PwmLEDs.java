@@ -6,7 +6,9 @@ package frc.robot.cosmetics;
 
 import edu.wpi.first.wpilibj.AddressableLED;
 import edu.wpi.first.wpilibj.AddressableLEDBuffer;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CosmeticConstants;
@@ -23,6 +25,8 @@ public class PwmLEDs extends SubsystemBase {
     private double speed = 0;
     private double cycleLength = 0.0;
     private double duration = 0.0;
+
+    public Color alliance = Color.kFirstRed;
 
     private double mp1 = 90.0;
     private double mp2 = 60.0;
@@ -61,6 +65,10 @@ public class PwmLEDs extends SubsystemBase {
         lights.setLength(CosmeticConstants.LIGHT_LENGTH);
         lights.setData(buffer);
         lights.start();
+    }
+
+    public void updateAllianceColor() {
+        alliance = DriverStation.getAlliance() == Alliance.Red ? Color.kFirstRed : Color.kFirstBlue;
     }
 
     public void solid(Color color) {
@@ -177,12 +185,12 @@ public class PwmLEDs extends SubsystemBase {
             return;
         }
         if (Math.abs(time - mp3) <= mpTolerance) {
-            solid(Color.kRed);
+            solid(Color.kFirstRed);
             lights.setData(buffer);
             return;
         }
         if (time < mp4 && time % 1.0 > 0.5) {
-            solid(dimColor(Color.kRed, 0.5));
+            solid(dimColor(Color.kFirstRed, 0.5));
             lights.setData(buffer);
             return;
 
