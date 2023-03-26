@@ -9,6 +9,7 @@ import com.revrobotics.CANSparkMax.IdleMode;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Counter;
@@ -68,6 +69,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
         private double elbowPosition;
         private static PIDController mainPID = new PIDController(0.03, 0, 0);
+        private final SlewRateLimiter slew = new SlewRateLimiter(1);
         private double minCarriagePos;
         private double minWristPos;
         private PIDController elbowDownPid;
@@ -138,13 +140,13 @@ public class ElbowSubsystem extends SubsystemBase {
                 case mid:
                 case loading:
                     if (carriagePosition > this.minCarriagePos && wristPosition > this.minWristPos) {
-                        s = this.elbowDownPid.calculate(elbowPosition, this.elbowPosition);
+                        s = this.slew.calculate(this.elbowDownPid.calculate(elbowPosition, this.elbowPosition));
                     }
                     break;
                 case high:
                     if (elevatorPosition < ElbowConstants.SAFETY_ELEVATOR_LIMIT_HIGH
                             || elbowPosition < this.elbowPosition) {
-                        s = this.elbowDownPid.calculate(elbowPosition, this.elbowPosition);
+                        s = this.slew.calculate(this.elbowDownPid.calculate(elbowPosition, this.elbowPosition));
                     }
                     break;
                 default:
