@@ -104,10 +104,6 @@ public class RobotContainer {
         Command cubeCommand = intakeSubsystem.cubeMode(driverInputs);
         driverInputs.button(DriverInputs.ConeIntake).whenPressed(coneCommand);
         driverInputs.button(DriverInputs.cubeIntake).whenPressed(cubeCommand);
-        driverInputs.button(DriverInputs.CancelMode).whenPressed(new InstantCommand(() -> {
-            coneCommand.cancel();
-            cubeCommand.cancel();
-        }));
     }
 
     public SendableChooser<Command> chooser = new SendableChooser<>();
@@ -207,7 +203,7 @@ public class RobotContainer {
     public Command scoreHighThenLeaveCommunityThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
                 group.highPosCommand(1).withTimeout(1.3),
-                intakeSubsystem.runMotor(0.6).withTimeout(0.4),
+                intakeSubsystem.runMotor(0.3).withTimeout(0.4),
                 group.startingPosCommand(1).withTimeout(1.4),
                 wristSubsystem.stopWrist(),
                 runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9),
