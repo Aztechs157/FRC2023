@@ -58,8 +58,10 @@ public class IntakeSubsystem extends SubsystemBase {
         return runOnce(() -> {
             lights.setClimb(Color.kPurple, Color.kBlack, 3, 2, 2);
             setSolenoid(Value.kForward);
+            stoppedSpeed = 0.25;
         }).andThen(runIntake(inputs).until(this::getSensor)).andThen(() -> {
             lights.setSolid(Color.kPurple);
+            stoppedSpeed = 0;
         });
 
     }
