@@ -28,7 +28,7 @@ public class PwmLEDs extends SubsystemBase {
     private double mp2 = 60.0;
     private double mp3 = 30.0;
     private double mp4 = 15.0;
-    private double mpTolerance = 0.0.5;
+    private double mpTolerance = 0.5;
 
     private Mode lightMode = Mode.SOLID;
 
