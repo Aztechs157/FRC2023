@@ -207,7 +207,7 @@ public class RobotContainer {
     public Command scoreHighThenLeaveCommunityThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
                 group.highPosCommand(1).withTimeout(1.3),
-                intakeSubsystem.runMotor(-0.6).withTimeout(0.4),
+                intakeSubsystem.runMotor(0.6).withTimeout(0.4),
                 group.startingPosCommand(1).withTimeout(1.4),
                 wristSubsystem.stopWrist(),
                 runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9),
