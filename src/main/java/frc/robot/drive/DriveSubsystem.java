@@ -36,8 +36,8 @@ public class DriveSubsystem extends SubsystemBase {
     private final NetworkTable table = NetworkTableInstance.getDefault().getTable("157/Swerve");
     private float gyroOffset = 0.0f;
     // tune these values for auto (mostly p, maybe some d)
-    public PIDController pidx = new PIDController(0.01, 0, 0);
-    public PIDController pidy = new PIDController(0.01, 0, 0);
+    public PIDController pidx = new PIDController(0.3, 0, 0);
+    public PIDController pidy = new PIDController(0.3, 0, 0);
     public PIDController pidr = new PIDController(1, 0, 0);
 
     public SlewRateLimiter slewx = new SlewRateLimiter(DriveConstants.AUTO_SLEW_RATE);
@@ -254,6 +254,10 @@ public class DriveSubsystem extends SubsystemBase {
         protected Double maxXSpeed = 1.0;
         protected Double maxYSpeed = 1.0;
         protected Double maxRotSpeed = 65.0;
+
+        protected double minX = 0.08;
+        protected double minY = 0.08;
+        protected double minRot = 0.1;
 
         protected boolean useSlewX = false;
         protected boolean useSlewY = false;
