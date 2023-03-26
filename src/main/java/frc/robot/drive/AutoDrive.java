@@ -98,6 +98,9 @@ public class AutoDrive extends CommandBase {
         Pose2d setPose = params.targetPose;
         Rotation2d rot = drive.getRobotPitch();
 
+        System.out.println(
+                "xDist: " + pose.getX() + "\nyDist: " + pose.getY() + "\nrot: " + pose.getRotation().getDegrees());
+
         double xVal = 0;
         double yVal = 0;
         double rotVal = 0;
@@ -146,6 +149,8 @@ public class AutoDrive extends CommandBase {
         xVal = capVal(xVal, params.maxXSpeed);
         yVal = capVal(yVal, params.maxYSpeed);
         rotVal = capVal(rotVal, params.maxRotSpeed);
+
+        System.out.println("xvcal: " + xVal + "\nyVal: " + yVal + "\nrotVal: " + rotVal);
 
         drive.set(new ChassisSpeeds(xVal, yVal, rotVal));
     }
