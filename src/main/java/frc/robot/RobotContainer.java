@@ -247,12 +247,12 @@ public class RobotContainer {
         double allySideMultiplier = DriverStation.getAlliance().compareTo(Alliance.Red) == 0 ? 1 : -1;
         return new SequentialCommandGroup(intakeSubsystem.intake(-1).withTimeout(0.75),
                 new ParallelRaceGroup(
-                        group.lowPosCommand(1),
+                        // group.lowPosCommand(1),
                         intakeSubsystem.intake(1),
                         new AutoDrive(driveSubsystem,
-                                new AutoDriveLineBuilder(5, 0 * allySideMultiplier, 0 * allySideMultiplier)
+                                new AutoDriveLineBuilder(-5, 0 * allySideMultiplier, 0 * allySideMultiplier)
                                         .holdRotTillRotStarts(true)
-                                        .startRotAtX(3.25)
+                                        .startRotAtX(-3.25)
                                         .useSlewXY(true)
                                         .xTolerance(0.05))),
                 new ParallelRaceGroup(group.startingPosCommand(1),

@@ -115,14 +115,14 @@ public final class Constants {
         public static final Range ROTATE_LIMITS = new Range(196, 281); // 162 fully down, 336 fully up
 
         public static final double START_POS = toNewRange(230, OLD_LIMITS, ROTATE_LIMITS); // 230;
-        public static final double LOW_POS = toNewRange(60, OLD_LIMITS, ROTATE_LIMITS);// 60;
+        public static final double LOW_POS = toNewRange(60 + 20, OLD_LIMITS, ROTATE_LIMITS);// 60;
         public static final double MID_POS = toNewRange(218, OLD_LIMITS, ROTATE_LIMITS);// 218;
         public static final double LOADING_POS = toNewRange(187, OLD_LIMITS, ROTATE_LIMITS);// 187;
         public static final double HIGH_POS = toNewRange(190, OLD_LIMITS, ROTATE_LIMITS);// 190;
 
         public static final double START_POS_MIN_CARRIAGE = toNewRange(1790, CarriageConstants.OLD_LIMITS,
                 CarriageConstants.CARRIAGE_LIMITS);// 1790;
-        public static final double LOW_POS_MIN_CARRIAGE = toNewRange(2159, CarriageConstants.OLD_LIMITS,
+        public static final double LOW_POS_MIN_CARRIAGE = toNewRange(2159 + 1000, CarriageConstants.OLD_LIMITS,
                 CarriageConstants.CARRIAGE_LIMITS);// 2159;
         public static final double MID_POS_MIN_CARRIAGE = toNewRange(1790, CarriageConstants.OLD_LIMITS,
                 CarriageConstants.CARRIAGE_LIMITS);// 1790;
