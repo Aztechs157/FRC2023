@@ -149,11 +149,10 @@ public class DriverInputs extends DynamicLayout {
                 .scaledBy(maxRotationPerSecond.getDegrees()));
         layout.assign(autoBalance, driver.a);
         layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
-            double driverSpeed = driver.leftBumper.get() ? 1 : (driver.rightBumper.get() ? -1 : 0);
-            if (Math.abs(operator.combinedTriggersHeld.get()) > Math.abs(driverSpeed)) {
+            if (Math.abs(operator.combinedTriggersHeld.get()) > Math.abs(driver.combinedTriggersHeld.get())) {
                 return operator.combinedTriggersHeld.get();
             }
-            return driverSpeed;
+            return driver.combinedTriggersHeld.get();
         }));
         layout.assign(ConeIntake, driver.x);
         layout.assign(cubeIntake, driver.y);
