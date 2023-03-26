@@ -33,6 +33,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -131,7 +132,8 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // return scoreHighThenLeaveCommunityThenEngage();
-        return new ProxyCommand(chooser::getSelected);
+        // return new ProxyCommand(chooser::getSelected);
+        return TwoPieceWithOdometry();
     }
 
     // Do not use unless very specific case calls for it (IE: ONLY DRIVE IS WORKING,
@@ -244,7 +246,7 @@ public class RobotContainer {
         return new SequentialCommandGroup(intakeSubsystem.intake(-1).withTimeout(0.75),
                 new ParallelRaceGroup(
                         // group.lowPosCommand(1),
-                        intakeSubsystem.intake(1),
+                        intakeSubsystem.runMotor(1),
                         new AutoDrive(driveSubsystem,
                                 new AutoDriveLineBuilder(-5, 0 * allySideMultiplier, 0 * allySideMultiplier)
                                         .holdRotTillRotStarts(true)
@@ -252,12 +254,12 @@ public class RobotContainer {
                                         .useSlewXY(true)
                                         .xTolerance(0.05))),
                 new ParallelRaceGroup(group.startingPosCommand(1),
-                        intakeSubsystem.intake(0.1),
+                        intakeSubsystem.runMotor(0.1),
                         new AutoDrive(driveSubsystem,
                                 new AutoDriveLineBuilder(0, 0 * allySideMultiplier, 180 * allySideMultiplier)
                                         .xTolerance(0.05)
                                         .useSlewAll(true))),
-                group.highPosCommand(1).withTimeout(1.3),
+                // group.highPosCommand(1).withTimeout(1.3),
                 intakeSubsystem.intake(-1).withTimeout(0.5),
                 group.startingPosCommand(1));
     }
