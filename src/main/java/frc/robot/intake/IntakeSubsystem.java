@@ -48,7 +48,7 @@ public class IntakeSubsystem extends SubsystemBase {
         return new InstantCommand(() -> {
             lights.setClimb(Color.kGold, Color.kBlack, 3, 2, 2);
             setSolenoid(Value.kForward);
-        }).andThen(runIntake(inputs).until(this::getSensor)).andThen(() -> {
+        }).andThen(new WaitCommand(60).until(this::getSensor)).andThen(() -> {
             setSolenoid(Value.kReverse);
             lights.setSolid(Color.kGold);
         });
