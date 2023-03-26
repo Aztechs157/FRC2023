@@ -153,7 +153,7 @@ public class AutoDrive extends CommandBase {
 
         System.out.println("xvcal: " + xVal + "\nyVal: " + yVal + "\nrotVal: " + rotVal);
 
-        drive.set(new ChassisSpeeds(xVal, yVal, rotVal));
+        drive.set(new ChassisSpeeds(xVal, yVal, -rotVal));
     }
 
     // Called once the command ends or is interrupted.
