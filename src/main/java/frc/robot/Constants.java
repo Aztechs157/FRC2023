@@ -94,7 +94,7 @@ public final class Constants {
         public static final double LOADING_POS = toNewRange(79, OLD_LIMITS, ROTATE_LIMITS);// 75;
         public static final double HIGH_POS = toNewRange(79 + 10, OLD_LIMITS, ROTATE_LIMITS);// 72;
 
-        public static final double START_POS_MIN_ARM = toNewRange(60, ElbowConstants.OLD_LIMITS,
+        public static final double START_POS_MIN_ARM = toNewRange(200, ElbowConstants.OLD_LIMITS,
                 ElbowConstants.ROTATE_LIMITS);// 60;
         public static final double LOW_POS_MIN_ARM = toNewRange(60, ElbowConstants.OLD_LIMITS,
                 ElbowConstants.ROTATE_LIMITS);// 60;
@@ -173,7 +173,7 @@ public final class Constants {
                 ElbowConstants.ROTATE_LIMITS);// 60;
         public static final double SAFETY_ELBOW_LIMIT_HIGH = toNewRange(157, ElbowConstants.OLD_LIMITS,
                 ElbowConstants.ROTATE_LIMITS);// 157;
-        public static final double SAFETY_WRIST_LIMIT_START_MID = toNewRange(60, WristConstants.OLD_LIMITS,
+        public static final double SAFETY_WRIST_LIMIT_START_MID = toNewRange(30, WristConstants.OLD_LIMITS,
                 WristConstants.ROTATE_LIMITS);// 60;
         public static final double SAFETY_WRIST_LIMIT_LOW = toNewRange(121, WristConstants.OLD_LIMITS,
                 WristConstants.ROTATE_LIMITS);// 121;
