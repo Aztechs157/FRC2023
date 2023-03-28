@@ -67,7 +67,7 @@ public class Robot extends TimedRobot {
         Color color1 = Color.kBlue;
         Color color2 = Color.kGold;
         if (DriverStation.isEStopped()) {
-            color1 = Color.kBeige;
+            color1 = Color.kRosyBrown;
             color2 = Color.kPowderBlue;
         }
         if (!DriverStation.isFMSAttached()) {

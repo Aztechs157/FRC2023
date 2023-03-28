@@ -14,6 +14,8 @@ public class AutoBalance extends CommandBase {
 
     private PIDController pid = new PIDController(0.008, 0, 0.001);
 
+    // private final PwmLEDs lights;
+
     /** Creates a new AutoBalance. */
     public AutoBalance(
             final DriveSubsystem drive) {

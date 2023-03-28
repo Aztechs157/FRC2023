@@ -11,6 +11,7 @@ import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CosmeticConstants;
 
+// We are no longer using this file to run any code, it is merely left as a reference
 public class BlinkInLEDs extends SubsystemBase {
     public final Spark lightController = new Spark(CosmeticConstants.LIGHT_ID);
     private ShuffleboardTab tab = Shuffleboard.getTab("LED");

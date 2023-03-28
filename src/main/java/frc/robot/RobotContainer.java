@@ -20,8 +20,6 @@ import frc.robot.lift.CarriageSubsystem;
 import frc.robot.lift.ElevatorSubsystem;
 import frc.robot.statemachines.SubsystemGroup;
 
-import java.time.Instant;
-
 import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
@@ -33,7 +31,6 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -132,8 +129,8 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // return scoreHighThenLeaveCommunityThenEngage();
-        // return new ProxyCommand(chooser::getSelected);
-        return TwoPieceWithOdometry();
+        return new ProxyCommand(chooser::getSelected);
+        // return TwoPieceWithOdometry();
     }
 
     // Do not use unless very specific case calls for it (IE: ONLY DRIVE IS WORKING,

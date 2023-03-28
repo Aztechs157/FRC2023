@@ -13,12 +13,10 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Counter.Mode;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.ElbowConstants;
 import frc.robot.input.DriverInputs;
 import frc.robot.lib.NumberUtil;
@@ -68,8 +66,8 @@ public class ElbowSubsystem extends SubsystemBase {
     public static class ElbowState implements SafetyLogic {
 
         private double elbowPosition;
-        private static PIDController mainPID = new PIDController(0.03, 0, 0);
-        private final SlewRateLimiter slew = new SlewRateLimiter(1);
+        private static PIDController mainPID = new PIDController(0.02, 0, 0.01);
+        private final SlewRateLimiter slew = new SlewRateLimiter(0.1);
         private double minCarriagePos;
         private double minWristPos;
         private PIDController elbowDownPid;

@@ -112,7 +112,7 @@ public final class Constants {
         public static final int SERVO_ID = 1;
 
         public static final Range OLD_LIMITS = new Range(60, 230);
-        public static final Range ROTATE_LIMITS = new Range(196, 281); // 162 fully down, 336 fully up
+        public static final Range ROTATE_LIMITS = new Range(138, 224); // 162 fully down, 336 fully up
 
         public static final double START_POS = toNewRange(230, OLD_LIMITS, ROTATE_LIMITS); // 230;
         public static final double LOW_POS = toNewRange(60 + 20, OLD_LIMITS, ROTATE_LIMITS);// 60;
@@ -186,7 +186,7 @@ public final class Constants {
     public static class CarriageConstants {
         public static final int CARRIAGE_MOTOR_ID = 17;
         public static final Range OLD_LIMITS = new Range(2015, 3350);
-        public static final Range CARRIAGE_LIMITS = new Range(930, 2155);
+        public static final Range CARRIAGE_LIMITS = new Range(850, 2000);
         public static final int CARRIAGE_ANALOG_ID = 0;
 
         public static final double START_POS = toNewRange(2165, OLD_LIMITS, CARRIAGE_LIMITS);// 2015;
