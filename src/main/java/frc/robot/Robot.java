@@ -63,19 +63,7 @@ public class Robot extends TimedRobot {
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
-        m_robotContainer.lightsSubsystem.updateAllianceColor();
-        Color color1 = Color.kBlue;
-        Color color2 = Color.kGold;
-        if (DriverStation.isEStopped()) {
-            color1 = Color.kRosyBrown;
-            color2 = Color.kPowderBlue;
-        }
-        if (!DriverStation.isFMSAttached()) {
-            color1 = PwmLEDs.dimColor(color1, 0.25);
-            color2 = PwmLEDs.dimColor(color2, 0.25);
-        }
-
-        m_robotContainer.lightsSubsystem.setWave(color1, color2, 10, 1);
+        m_robotContainer.lightsSubsystem.setDefault();
     }
 
     @Override

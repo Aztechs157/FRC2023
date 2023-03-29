@@ -167,6 +167,22 @@ public class PwmLEDs extends SubsystemBase {
         this.lightMode = Mode.STROBE;
     }
 
+    public void setDefault() {
+        updateAllianceColor();
+        Color color1 = Color.kBlue;
+        Color color2 = Color.kGold;
+        if (DriverStation.isEStopped()) {
+            color1 = Color.kRosyBrown;
+            color2 = Color.kPowderBlue;
+        }
+        if (!DriverStation.isFMSAttached()) {
+            color1 = PwmLEDs.dimColor(color1, 0.25);
+            color2 = PwmLEDs.dimColor(color2, 0.25);
+        }
+
+        setWave(color1, color2, 10, 1);
+    }
+
     public static Color dimColor(Color color, double brightness) {
         return new Color(color.red * brightness, color.green * brightness, color.blue * brightness);
     }

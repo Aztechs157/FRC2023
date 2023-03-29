@@ -88,7 +88,7 @@ public class RobotContainer {
      * Flight joysticks.
      */
     private void configureBindings() {
-        driverInputs.button(DriverInputs.autoBalance).whileHeld(new AutoBalance(driveSubsystem));
+        driverInputs.button(DriverInputs.autoBalance).whileHeld(new AutoBalance(driveSubsystem, lightsSubsystem));
         driverInputs.button(DriverInputs.lowPosition).whileHeld(group.lowPosCommand(1));
         driverInputs.button(DriverInputs.midPosition).whileHeld(group.midPosConeCommand(1));
         driverInputs.button(DriverInputs.loadingPosition).whileHeld(group.loadingPosCommand(1));
@@ -165,7 +165,7 @@ public class RobotContainer {
         return driveSubsystem.addGyroOffset(180.0f).andThen(wristSubsystem.turnDownToPos(75))
                 .andThen(intakeSubsystem.ejectCargo().withTimeout(0.5))
                 .andThen(runDistanceWithSpeeds(-0.5, 0.0, 3000.0).withTimeout(1.75))
-                .andThen(new AutoBalance(driveSubsystem));
+                .andThen(new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
     // Do not use unless very specific case calls for it (IE: OUR STATES AREN'T
@@ -175,7 +175,7 @@ public class RobotContainer {
                 .andThen(intakeSubsystem.ejectCargo().withTimeout(0.5))
                 .andThen(runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9))
                 .andThen(runDistanceWithSpeeds(0.5, 0.0, -3000.0).withTimeout(1.85))
-                .andThen(new AutoBalance(driveSubsystem));
+                .andThen(new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
     // SCORES A CUBE HIGH THEN LEAVES COMMUNITY
@@ -195,7 +195,7 @@ public class RobotContainer {
                 intakeSubsystem.runMotor(-1).withTimeout(0.3),
                 group.startingPosCommand(1).withTimeout(1.4),
                 runDistanceWithSpeeds(-0.5, 0.0, -3000.0).withTimeout(1.75),
-                new AutoBalance(driveSubsystem));
+                new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
     // SCORES A CUBE HIGH THEN LEAVES COMMUNITY THEN ENGAGES ON CHARING PLATFORM
@@ -207,7 +207,7 @@ public class RobotContainer {
                 wristSubsystem.stopWrist(),
                 runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9),
                 runDistanceWithSpeeds(0.5, 0.0, -3000.0).withTimeout(1.85),
-                new AutoBalance(driveSubsystem));
+                new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
     public Command leaveCommunityThenEngage() {
@@ -215,7 +215,7 @@ public class RobotContainer {
                 driveSubsystem.addGyroOffset(180),
                 runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9),
                 runDistanceWithSpeeds(0.5, 0.0, -3000.0).withTimeout(1.85),
-                new AutoBalance(driveSubsystem));
+                new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
     public Command TwoPieceThenEngage() {
@@ -235,7 +235,7 @@ public class RobotContainer {
                         .withTimeout(0.5 + 1.75), // first value is the wait, second value is the drive time, and maybe
                 // increase Y to adjust for charge station (if hit charge station
                 // side, increase Y) maybe add a forward to get further up platform
-                new AutoBalance(driveSubsystem));
+                new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
     public Command TwoPieceWithOdometry() {
@@ -291,7 +291,7 @@ public class RobotContainer {
                                         .maxXSpeed(0.5)
                                         .usePidX(false)
                                         .xTolerance(0.1))),
-                new AutoBalance(driveSubsystem));
+                new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
     /*
