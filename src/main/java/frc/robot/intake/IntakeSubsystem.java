@@ -37,6 +37,9 @@ public class IntakeSubsystem extends SubsystemBase {
 
     private double stoppedSpeed = 0.0;
 
+    private boolean cubeModeOn = false;
+    private boolean coneModeOn = false;
+
     public IntakeSubsystem(PwmLEDs lights) {
         airCompressor.enableDigital();
         this.lights = lights;
@@ -44,24 +47,39 @@ public class IntakeSubsystem extends SubsystemBase {
         tab.addBoolean("intake sensor", this::getSensor);
     }
 
-    public Command coneMode(final DriverInputs inputs) {
+    public Command coneMode(final DriverInputs inputs, final IntakeSubsystem intakesubsystem) {
         return new InstantCommand(() -> {
             lights.setClimb(Color.kGold, Color.kBlack, 3, 2, 2);
             setSolenoid(Value.kForward);
+            stoppedSpeed = 0;
+            coneModeOn = true;
         }).andThen(new WaitCommand(60).until(this::getSensor)).andThen(() -> {
-            setSolenoid(Value.kReverse);
-            lights.setSolid(Color.kGold);
+            if (cubeModeOn == false) {
+                setSolenoid(Value.kReverse);
+                lights.setSolid(Color.kGold);
+                stoppedSpeed = 0;
+                coneModeOn = false;
+            } else {
+                coneModeOn = false;
+            }
         });
     }
 
-    public Command cubeMode(final DriverInputs inputs) {
+    public Command cubeMode(final DriverInputs inputs, final IntakeSubsystem intakeSubsystem) {
         return runOnce(() -> {
             lights.setClimb(Color.kPurple, Color.kBlack, 3, 2, 2);
             setSolenoid(Value.kForward);
             stoppedSpeed = 0.25;
+            cubeModeOn = true;
         }).andThen(runIntake(inputs).until(this::getSensor)).andThen(() -> {
-            lights.setSolid(Color.kPurple);
-            stoppedSpeed = 0;
+            if (coneModeOn == false) {
+                lights.setSolid(Color.kPurple);
+                stoppedSpeed = 0;
+                cubeModeOn = false;
+            } else {
+                cubeModeOn = false;
+                stoppedSpeed = 0;
+            }
         });
 
     }
