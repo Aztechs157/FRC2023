@@ -13,12 +13,10 @@ import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.Counter;
-import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Counter.Mode;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
 import frc.robot.Constants.ElbowConstants;
 import frc.robot.input.DriverInputs;
 import frc.robot.lib.NumberUtil;
@@ -68,38 +66,41 @@ public class ElbowSubsystem extends SubsystemBase {
     public static class ElbowState implements SafetyLogic {
 
         private double elbowPosition;
-        private static PIDController mainPID = new PIDController(0.03, 0, 0);
-        private final SlewRateLimiter slew = new SlewRateLimiter(1);
+        private static PIDController mainPID = new PIDController(0.015, 0, 0.000000);
+        private static PIDController otherPID = new PIDController(0.01, 0, 0);
+        private final SlewRateLimiter slew = new SlewRateLimiter(999);
         private double minCarriagePos;
         private double minWristPos;
         private PIDController elbowDownPid;
+        private PIDController elbowUpPid;
         private ElbowStates state;
 
         public enum ElbowStates {
             start, low, mid, loading, high
         }
 
-        public ElbowState(final double elbowPosition, final PIDController elbowDownPid,
+        public ElbowState(final double elbowPosition, final PIDController elbowDownPid, final PIDController elbowUpPid,
                 final double minCarriagePos, double minWristPos, ElbowStates state) {
             this.elbowPosition = elbowPosition;
+            this.elbowUpPid = elbowUpPid;
             this.elbowDownPid = elbowDownPid;
             this.minCarriagePos = minCarriagePos;
             this.minWristPos = minWristPos;
             this.state = state;
         }
 
-        public static final ElbowState start = new ElbowState(ElbowConstants.START_POS, mainPID,
+        public static final ElbowState start = new ElbowState(ElbowConstants.START_POS, mainPID, otherPID,
                 ElbowConstants.START_POS_MIN_CARRIAGE,
                 ElbowConstants.START_POS_MIN_WRIST, ElbowStates.start);
-        public static final ElbowState low = new ElbowState(ElbowConstants.LOW_POS, mainPID,
+        public static final ElbowState low = new ElbowState(ElbowConstants.LOW_POS, mainPID, otherPID,
                 ElbowConstants.LOW_POS_MIN_CARRIAGE,
                 ElbowConstants.LOW_POS_MIN_WRIST, ElbowStates.low);
-        public static final ElbowState mid = new ElbowState(ElbowConstants.MID_POS, mainPID,
+        public static final ElbowState mid = new ElbowState(ElbowConstants.MID_POS, mainPID, otherPID,
                 ElbowConstants.MID_POS_MIN_CARRIAGE,
                 ElbowConstants.MID_POS_MIN_WRIST, ElbowStates.mid);
-        public static final ElbowState loading = new ElbowState(ElbowConstants.LOADING_POS, mainPID,
+        public static final ElbowState loading = new ElbowState(ElbowConstants.LOADING_POS, mainPID, otherPID,
                 ElbowConstants.LOADING_POS_MIN_CARRIAGE, ElbowConstants.LOADING_POS_MIN_WRIST, ElbowStates.loading);
-        public static final ElbowState high = new ElbowState(ElbowConstants.HIGH_POS, mainPID,
+        public static final ElbowState high = new ElbowState(ElbowConstants.HIGH_POS, mainPID, otherPID,
                 ElbowConstants.HIGH_POS_MIN_CARRIAGE,
                 ElbowConstants.HIGH_POS_MIN_WRIST, ElbowStates.high);
 
@@ -135,18 +136,24 @@ public class ElbowSubsystem extends SubsystemBase {
             // if it is too low, as to stop the elbow from colliding into a pole
             var s = 0.0;
             switch (this.state) {
-                case start:
                 case low:
-                case mid:
-                case loading:
                     if (carriagePosition > this.minCarriagePos && wristPosition > this.minWristPos) {
                         s = this.slew.calculate(this.elbowDownPid.calculate(elbowPosition, this.elbowPosition));
                     }
+                    // System.out.println(s);
+                    break;
+                case start:
+                case mid:
+                case loading:
+                    if (carriagePosition > this.minCarriagePos && wristPosition > this.minWristPos) {
+                        s = this.slew.calculate(this.elbowUpPid.calculate(elbowPosition, this.elbowPosition));
+                    }
+                    // System.out.println(s);
                     break;
                 case high:
                     if (elevatorPosition < ElbowConstants.SAFETY_ELEVATOR_LIMIT_HIGH
                             || elbowPosition < this.elbowPosition) {
-                        s = this.slew.calculate(this.elbowDownPid.calculate(elbowPosition, this.elbowPosition));
+                        s = this.slew.calculate(this.elbowUpPid.calculate(elbowPosition, this.elbowPosition));
                     }
                     break;
                 default:

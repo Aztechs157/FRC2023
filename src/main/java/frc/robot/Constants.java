@@ -112,10 +112,10 @@ public final class Constants {
         public static final int SERVO_ID = 1;
 
         public static final Range OLD_LIMITS = new Range(60, 230);
-        public static final Range ROTATE_LIMITS = new Range(196, 281); // 162 fully down, 336 fully up
+        public static final Range ROTATE_LIMITS = new Range(139, 214); // 162 fully down, 336 fully up
 
         public static final double START_POS = toNewRange(230, OLD_LIMITS, ROTATE_LIMITS); // 230;
-        public static final double LOW_POS = toNewRange(60 + 20, OLD_LIMITS, ROTATE_LIMITS);// 60;
+        public static final double LOW_POS = toNewRange(60 + 5, OLD_LIMITS, ROTATE_LIMITS);// 60;
         public static final double MID_POS = toNewRange(218, OLD_LIMITS, ROTATE_LIMITS);// 218;
         public static final double LOADING_POS = toNewRange(187, OLD_LIMITS, ROTATE_LIMITS);// 187;
         public static final double HIGH_POS = toNewRange(190, OLD_LIMITS, ROTATE_LIMITS);// 190;
@@ -131,15 +131,15 @@ public final class Constants {
         public static final double HIGH_POS_MIN_CARRIAGE = toNewRange(1790, CarriageConstants.OLD_LIMITS,
                 CarriageConstants.CARRIAGE_LIMITS);// 1790;
 
-        public static final double START_POS_MIN_WRIST = toNewRange(36, WristConstants.OLD_LIMITS,
+        public static final double START_POS_MIN_WRIST = toNewRange(30, WristConstants.OLD_LIMITS,
                 WristConstants.ROTATE_LIMITS);// 36;
         public static final double LOW_POS_MIN_WRIST = toNewRange(121, WristConstants.OLD_LIMITS,
                 WristConstants.ROTATE_LIMITS);// 121;
-        public static final double MID_POS_MIN_WRIST = toNewRange(36, WristConstants.OLD_LIMITS,
+        public static final double MID_POS_MIN_WRIST = toNewRange(30, WristConstants.OLD_LIMITS,
                 WristConstants.ROTATE_LIMITS);// 36;
-        public static final double LOADING_POS_MIN_WRIST = toNewRange(36, WristConstants.OLD_LIMITS,
+        public static final double LOADING_POS_MIN_WRIST = toNewRange(30, WristConstants.OLD_LIMITS,
                 WristConstants.ROTATE_LIMITS);// 36;
-        public static final double HIGH_POS_MIN_WRIST = toNewRange(36, WristConstants.OLD_LIMITS,
+        public static final double HIGH_POS_MIN_WRIST = toNewRange(30, WristConstants.OLD_LIMITS,
                 WristConstants.ROTATE_LIMITS);// 36;
 
         public static final double OTHER_POS_MIN_ELEVATOR = toNewRange(1675, ElevatorConstants.OLD_LIMITS,
@@ -186,7 +186,7 @@ public final class Constants {
     public static class CarriageConstants {
         public static final int CARRIAGE_MOTOR_ID = 17;
         public static final Range OLD_LIMITS = new Range(2015, 3350);
-        public static final Range CARRIAGE_LIMITS = new Range(930, 2155);
+        public static final Range CARRIAGE_LIMITS = new Range(800, 1944);
         public static final int CARRIAGE_ANALOG_ID = 0;
 
         public static final double START_POS = toNewRange(2165, OLD_LIMITS, CARRIAGE_LIMITS);// 2015;

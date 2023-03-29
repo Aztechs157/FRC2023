@@ -32,6 +32,8 @@ public class PwmLEDs extends SubsystemBase {
     private double mp2 = 60.0;
     private double mp3 = 30.0;
     private double mp4 = 15.0;
+    private double mp5 = 10.0;
+    private double mp6 = 5.0;
     private double mpTolerance = 0.5;
 
     private Mode lightMode = Mode.SOLID;
@@ -165,6 +167,22 @@ public class PwmLEDs extends SubsystemBase {
         this.lightMode = Mode.STROBE;
     }
 
+    public void setDefault() {
+        updateAllianceColor();
+        Color color1 = Color.kBlue;
+        Color color2 = Color.kGold;
+        if (DriverStation.isEStopped()) {
+            color1 = Color.kDarkGreen;
+            color2 = Color.kPowderBlue;
+        }
+        if (!DriverStation.isFMSAttached()) {
+            color1 = PwmLEDs.dimColor(color1, 0.25);
+            color2 = PwmLEDs.dimColor(color2, 0.25);
+        }
+
+        setWave(color1, color2, 10, 3);
+    }
+
     public static Color dimColor(Color color, double brightness) {
         return new Color(color.red * brightness, color.green * brightness, color.blue * brightness);
     }
@@ -189,11 +207,20 @@ public class PwmLEDs extends SubsystemBase {
             lights.setData(buffer);
             return;
         }
-        if (time < mp4 && time % 1.0 > 0.5) {
+        if (time < mp4 && time > mp5 && time % 1.0 > 0.5) {
+            solid(dimColor(Color.kDarkGoldenrod, 0.5));
+            lights.setData(buffer);
+            return;
+        }
+        if (time < mp5 && time > mp6 && time % 1.0 > 0.5) {
+            solid(dimColor(Color.kFirstBlue, 0.5));
+            lights.setData(buffer);
+            return;
+        }
+        if (time < mp6 && time % 1.0 > 0.5) {
             solid(dimColor(Color.kFirstRed, 0.5));
             lights.setData(buffer);
             return;
-
         }
 
         switch (lightMode) {

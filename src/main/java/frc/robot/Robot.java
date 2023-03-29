@@ -4,12 +4,9 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
-import edu.wpi.first.wpilibj.util.Color;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.cosmetics.PwmLEDs;
 
 /**
  * The VM is configured to automatically run this class, and to call the
@@ -63,19 +60,7 @@ public class Robot extends TimedRobot {
     /** This function is called once each time the robot enters Disabled mode. */
     @Override
     public void disabledInit() {
-        m_robotContainer.lightsSubsystem.updateAllianceColor();
-        Color color1 = Color.kBlue;
-        Color color2 = Color.kGold;
-        if (DriverStation.isEStopped()) {
-            color1 = Color.kBeige;
-            color2 = Color.kPowderBlue;
-        }
-        if (!DriverStation.isFMSAttached()) {
-            color1 = PwmLEDs.dimColor(color1, 0.25);
-            color2 = PwmLEDs.dimColor(color2, 0.25);
-        }
-
-        m_robotContainer.lightsSubsystem.setWave(color1, color2, 10, 1);
+        m_robotContainer.lightsSubsystem.setDefault();
     }
 
     @Override
