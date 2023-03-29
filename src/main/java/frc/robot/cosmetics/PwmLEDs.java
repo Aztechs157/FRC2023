@@ -172,7 +172,7 @@ public class PwmLEDs extends SubsystemBase {
         Color color1 = Color.kBlue;
         Color color2 = Color.kGold;
         if (DriverStation.isEStopped()) {
-            color1 = Color.kRosyBrown;
+            color1 = Color.kDarkGreen;
             color2 = Color.kPowderBlue;
         }
         if (!DriverStation.isFMSAttached()) {
@@ -180,7 +180,7 @@ public class PwmLEDs extends SubsystemBase {
             color2 = PwmLEDs.dimColor(color2, 0.25);
         }
 
-        setWave(color1, color2, 10, 1);
+        setWave(color1, color2, 10, 3);
     }
 
     public static Color dimColor(Color color, double brightness) {

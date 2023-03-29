@@ -140,7 +140,7 @@ public class ElbowSubsystem extends SubsystemBase {
                     if (carriagePosition > this.minCarriagePos && wristPosition > this.minWristPos) {
                         s = this.slew.calculate(this.elbowDownPid.calculate(elbowPosition, this.elbowPosition));
                     }
-                    System.out.println(s);
+                    // System.out.println(s);
                     break;
                 case start:
                 case mid:
@@ -148,7 +148,7 @@ public class ElbowSubsystem extends SubsystemBase {
                     if (carriagePosition > this.minCarriagePos && wristPosition > this.minWristPos) {
                         s = this.slew.calculate(this.elbowUpPid.calculate(elbowPosition, this.elbowPosition));
                     }
-                    System.out.println(s);
+                    // System.out.println(s);
                     break;
                 case high:
                     if (elevatorPosition < ElbowConstants.SAFETY_ELEVATOR_LIMIT_HIGH
