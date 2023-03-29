@@ -249,13 +249,16 @@ public class RobotContainer {
                                         .holdRotTillRotStarts(true)
                                         .startRotAtX(-3.25)
                                         .useSlewXY(true)
-                                        .xTolerance(0.25))),
+                                        .xTolerance(0.25)
+                                        .maxXYSpeed(0.5))),
                 new ParallelRaceGroup(group.startingPosCommand(1),
                         intakeSubsystem.runMotor(0.1),
                         new AutoDrive(driveSubsystem,
                                 new AutoDriveLineBuilder(0, 0 * allySideMultiplier, 180 * allySideMultiplier)
                                         .xTolerance(0.25)
-                                        .useSlewAll(true))),
+                                        .useSlewAll(
+                                                true)
+                                        .maxXYSpeed(0.5))),
                 // group.highPosCommand(1).withTimeout(1.3),
                 intakeSubsystem.intake(-1).withTimeout(0.5),
                 group.startingPosCommand(1));
