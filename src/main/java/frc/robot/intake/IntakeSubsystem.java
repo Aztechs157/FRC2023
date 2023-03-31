@@ -114,8 +114,10 @@ public class IntakeSubsystem extends SubsystemBase {
             isOpen = value == DoubleSolenoid.Value.kForward;
             if (isOpen) {
                 lights.setSolid(Color.kPurple);
+                stoppedSpeed = 0;
             } else {
                 lights.setSolid(Color.kYellow);
+                stoppedSpeed = 0;
             }
         });
     }
