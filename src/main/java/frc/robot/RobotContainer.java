@@ -201,7 +201,7 @@ public class RobotContainer {
     // SCORES A CUBE HIGH THEN LEAVES COMMUNITY THEN ENGAGES ON CHARING PLATFORM
     public Command scoreHighThenLeaveCommunityThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.highPosCommand(1).withTimeout(1.3),
+                group.loadingPosCommand(1).withTimeout(1.3),
                 intakeSubsystem.runMotor(0.3).withTimeout(0.4),
                 group.startingPosCommand(1).withTimeout(1.4),
                 wristSubsystem.stopWrist(),
