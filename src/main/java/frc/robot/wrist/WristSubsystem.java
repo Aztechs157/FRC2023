@@ -108,20 +108,24 @@ public class WristSubsystem extends SubsystemBase {
         private double wristPosition;
         public static PIDController pid = new PIDController(0.01, 0, 0);
         private double minElbowPos;
+        private double maxElbowPos;
 
-        public WristState(final double wristPosition, final double minArmPos) {
+        public WristState(final double wristPosition, final double minArmPos, final double maxElbowPos) {
             this.wristPosition = wristPosition;
             this.minElbowPos = minArmPos;
-
+            this.maxElbowPos = maxElbowPos;
         }
 
         public static final WristState start = new WristState(WristConstants.START_POS,
-                WristConstants.START_POS_MIN_ARM);
-        public static final WristState low = new WristState(WristConstants.LOW_POS, WristConstants.LOW_POS_MIN_ARM);
-        public static final WristState mid = new WristState(WristConstants.MID_POS, WristConstants.MID_POS_MIN_ARM);
+                WristConstants.START_POS_MIN_ARM, WristConstants.OTHER_POS_ELEVATOR);
+        public static final WristState low = new WristState(WristConstants.LOW_POS, WristConstants.LOW_POS_MIN_ARM,
+                WristConstants.OTHER_POS_ELEVATOR);
+        public static final WristState mid = new WristState(WristConstants.MID_POS, WristConstants.MID_POS_MIN_ARM,
+                WristConstants.OTHER_POS_ELEVATOR);
         public static final WristState loading = new WristState(WristConstants.LOADING_POS,
-                WristConstants.LOADING_POS_MIN_ARM);
-        public static final WristState high = new WristState(WristConstants.HIGH_POS, WristConstants.HIGH_POS_MIN_ARM);
+                WristConstants.LOADING_POS_MIN_ARM, WristConstants.OTHER_POS_ELEVATOR);
+        public static final WristState high = new WristState(WristConstants.HIGH_POS, WristConstants.HIGH_POS_MIN_ARM,
+                WristConstants.HIGH_POS_MAX_ELEVATOR);
 
         @Override
         public SafetyLogic lowPosition() {
@@ -148,7 +152,7 @@ public class WristSubsystem extends SubsystemBase {
                 double carriagePosition) {
             // Runs the wrist for the states
             double pidVal = pid.calculate(wristPosition, this.wristPosition);
-            if (elbowPosition > this.minElbowPos || pidVal > 0) {
+            if ((elbowPosition > this.minElbowPos && elevatorPosition < this.maxElbowPos) || pidVal > 0) {
                 return pidVal;
             }
 

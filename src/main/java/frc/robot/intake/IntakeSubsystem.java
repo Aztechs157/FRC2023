@@ -48,39 +48,31 @@ public class IntakeSubsystem extends SubsystemBase {
     }
 
     public Command coneMode(final DriverInputs inputs, final IntakeSubsystem intakesubsystem) {
-        return new InstantCommand(() -> {
+        Command x = runOnce(() -> {
             lights.setClimb(Color.kGold, Color.kBlack, 3, 2, 2);
             setSolenoid(Value.kForward);
             stoppedSpeed = 0;
-            coneModeOn = true;
-        }).andThen(new WaitCommand(60).until(this::getSensor)).andThen(() -> {
-            if (cubeModeOn == false) {
-                setSolenoid(Value.kReverse);
-                lights.setSolid(Color.kGold);
-                stoppedSpeed = 0;
-                coneModeOn = false;
-            } else {
-                coneModeOn = false;
-            }
-        });
+        }).andThen(run(() -> {
+        }).until(this::getSensor)).andThen(runOnce(() -> {
+            setSolenoid(Value.kReverse);
+            lights.setSolid(Color.kGold);
+            stoppedSpeed = 0;
+        }));
+        // System.out.println("coneMode requires intake: " + x.hasRequirement(this));
+        return x;
     }
 
     public Command cubeMode(final DriverInputs inputs, final IntakeSubsystem intakeSubsystem) {
-        return runOnce(() -> {
+        Command x = runOnce(() -> {
             lights.setClimb(Color.kPurple, Color.kBlack, 3, 2, 2);
             setSolenoid(Value.kForward);
             stoppedSpeed = 0.25;
-            cubeModeOn = true;
-        }).andThen(runIntake(inputs).until(this::getSensor)).andThen(() -> {
-            if (coneModeOn == false) {
-                lights.setSolid(Color.kPurple);
-                stoppedSpeed = 0;
-                cubeModeOn = false;
-            } else {
-                cubeModeOn = false;
-                stoppedSpeed = 0;
-            }
-        });
+        }).andThen(runIntake(inputs).until(this::getSensor)).andThen(runOnce(() -> {
+            lights.setSolid(Color.kPurple);
+            stoppedSpeed = 0;
+        }));
+        // System.out.println("cubeMode requires intake: " + x.hasRequirement(this));
+        return x;
 
     }
 
@@ -135,7 +127,7 @@ public class IntakeSubsystem extends SubsystemBase {
     // NetworkTableInstance.getDefault().getEntry("157/Intake/Sensor");
 
     public Command ejectCargo() {
-        return runOnce(() -> System.out.println("ejecting!!!")).andThen(runMotor(1));
+        return runMotor(1);
     }
 
     @Override

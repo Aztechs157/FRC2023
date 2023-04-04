@@ -100,8 +100,15 @@ public class RobotContainer {
                 .whenPressed(intakeSubsystem.setSolenoidWithLights(DoubleSolenoid.Value.kReverse));
         Command coneCommand = intakeSubsystem.coneMode(driverInputs, intakeSubsystem);
         Command cubeCommand = intakeSubsystem.cubeMode(driverInputs, intakeSubsystem);
+
         driverInputs.button(DriverInputs.ConeIntake).whenPressed(coneCommand);
+        driverInputs.button(DriverInputs.ConeIntake).whenPressed(new InstantCommand(() -> {
+            cubeCommand.cancel();
+        }));
         driverInputs.button(DriverInputs.cubeIntake).whenPressed(cubeCommand);
+        driverInputs.button(DriverInputs.cubeIntake).whenPressed(new InstantCommand(() -> {
+            coneCommand.cancel();
+        }));
     }
 
     public SendableChooser<Command> chooser = new SendableChooser<>();
@@ -181,8 +188,8 @@ public class RobotContainer {
     // SCORES A CUBE HIGH THEN LEAVES COMMUNITY
     public Command scoreHighThenRunDistance() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.midPosConeCommand(1).withTimeout(1.3),
-                intakeSubsystem.runMotor(-1).withTimeout(0.3),
+                group.loadingPosCommand(1).withTimeout(1.3),
+                intakeSubsystem.runMotor(0.5).withTimeout(0.3),
                 group.startingPosCommand(1).withTimeout(1.4),
                 runDistanceWithSpeeds(-0.3, 0.0, 3000.0).withTimeout(4.2));
     }
@@ -191,8 +198,8 @@ public class RobotContainer {
     // COMMUNITY
     public Command scoreHighThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.midPosConeCommand(1).withTimeout(1.3),
-                intakeSubsystem.runMotor(-1).withTimeout(0.3),
+                group.loadingPosCommand(1).withTimeout(1.3),
+                intakeSubsystem.runMotor(0.5).withTimeout(0.3),
                 group.startingPosCommand(1).withTimeout(1.4),
                 runDistanceWithSpeeds(-0.5, 0.0, -3000.0).withTimeout(1.75),
                 new AutoBalance(driveSubsystem, lightsSubsystem));
@@ -201,12 +208,12 @@ public class RobotContainer {
     // SCORES A CUBE HIGH THEN LEAVES COMMUNITY THEN ENGAGES ON CHARING PLATFORM
     public Command scoreHighThenLeaveCommunityThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.highPosCommand(1).withTimeout(1.3),
-                intakeSubsystem.runMotor(0.3).withTimeout(0.4),
-                group.startingPosCommand(1).withTimeout(1.4),
+                group.loadingPosCommand(1).withTimeout(1.2),
+                intakeSubsystem.runMotor(0.3).withTimeout(0.30),
+                group.startingPosCommand(1).withTimeout(1),
                 wristSubsystem.stopWrist(),
-                runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9),
-                runDistanceWithSpeeds(0.5, 0.0, -3000.0).withTimeout(1.85),
+                runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(3),
+                runDistanceWithSpeeds(0.5, 0.0, -3000.0).withTimeout(2.05),
                 new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 

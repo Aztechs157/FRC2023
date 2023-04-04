@@ -1,0 +1,9 @@
+{
+  "NTProvider": {
+    "types": {
+      "/FMSInfo": "FMSInfo",
+      "/Shuffleboard/Driver/Auto Choose": "String Chooser",
+      "/SmartDashboard/Reset Yaw": "Command"
+    }
+  }
+}

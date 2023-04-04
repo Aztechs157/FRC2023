@@ -113,6 +113,7 @@ public class CarriageSubsystem extends SubsystemBase {
         @Override
         public double stateCalculate(double speed, double elbowPosition, double wristPosition, double elevatorPosition,
                 double carriagePosition) {
+            var x = 0.0;
             // Ensures the carriage is safe to move (elbow won't get crushed)
             if (elbowPosition > this.minElbowPos) {
                 // if (carriagePosition < this.carriagePosition - 100) {
@@ -120,9 +121,12 @@ public class CarriageSubsystem extends SubsystemBase {
                 // } else if (carriagePosition > this.carriagePosition + 100) {
                 // return -0.2;
                 //
-                return this.carriageDownPid.calculate(carriagePosition, this.carriagePosition);
+                x = this.carriageDownPid.calculate(carriagePosition, this.carriagePosition);
             }
-            return 0;
+            if (Math.abs(x) > 0.9) {
+                x = x > 0 ? 0.9 : -0.9;
+            }
+            return x;
         }
 
     }

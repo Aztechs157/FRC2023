@@ -24,6 +24,13 @@ public class FullDrive extends CommandBase {
         this.driverInputs = driverInputs;
     }
 
+    @Override
+    public void initialize() {
+        xSlewRateLimiter.reset(driverInputs.axis(DriverInputs.driveSpeedY).get());
+        ySlewRateLimiter.reset(driverInputs.axis(DriverInputs.driveSpeedX).get());
+        rotSlewRateLimiter.reset(driverInputs.axis(DriverInputs.driveRotation).get());
+    }
+
     // Called every time the scheduler runs while the command is scheduled.
     @Override
     public void execute() {

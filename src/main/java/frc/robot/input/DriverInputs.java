@@ -141,7 +141,7 @@ public class DriverInputs extends DynamicLayout {
         final var driver = new XboxOne(0);
         final var operator = new XboxOne(1);
 
-        final var speedModifier = 0.80;
+        final var speedModifier = 1;
 
         layout.assign(driveSpeedX, driver.leftStickX.map(deadzone::apply).scaledBy(speedModifier));
         layout.assign(driveSpeedY, driver.leftStickY.map(deadzone::apply).scaledBy(speedModifier));
