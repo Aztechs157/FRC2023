@@ -6,6 +6,7 @@
 
 package frc.robot;
 
+import frc.robot.Constants.AutoConstants;
 import frc.robot.cosmetics.PwmLEDs;
 import frc.robot.drive.AutoBalance;
 import frc.robot.drive.AutoDrive;
@@ -151,7 +152,7 @@ public class RobotContainer {
     // MID)
     public Command WristDownThenEjectThenRunDistance() {
         return driveSubsystem.addGyroOffset(180.0f).andThen(wristSubsystem.turnDownToPos(180))
-                .andThen(intakeSubsystem.ejectCargo().withTimeout(0.5))
+                .andThen(intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME))
                 .andThen(runDistanceWithSpeeds(-0.3, 0.0, 3000.0).withTimeout(4.2));
     }
 
@@ -159,7 +160,7 @@ public class RobotContainer {
     // FOR WHATEVER REASON)
     public Command WristDownThenEjectThenPoorlyDock() {
         return driveSubsystem.addGyroOffset(180.0f).andThen(wristSubsystem.turnDownToPos(180))
-                .andThen(intakeSubsystem.ejectCargo().withTimeout(0.5))
+                .andThen(intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME))
                 .andThen(runDistanceWithSpeeds(-0.5, 0.0, 3000.0).withTimeout(1.75))
                 .andThen(driveSubsystem.driveRawDistanceCommand(
                         new ChassisSpeeds(0, 0, 0.001),
@@ -170,7 +171,7 @@ public class RobotContainer {
     // WORKING)
     public Command WristDownThenEjectThenBetterDock() {
         return driveSubsystem.addGyroOffset(180.0f).andThen(wristSubsystem.turnDownToPos(75))
-                .andThen(intakeSubsystem.ejectCargo().withTimeout(0.5))
+                .andThen(intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME))
                 .andThen(runDistanceWithSpeeds(-0.5, 0.0, 3000.0).withTimeout(1.75))
                 .andThen(new AutoBalance(driveSubsystem, lightsSubsystem));
     }
@@ -179,7 +180,7 @@ public class RobotContainer {
     // WORKING)
     public Command WristDownThenEjectThenLeaveCommunityThenBetterDock() {
         return driveSubsystem.addGyroOffset(180.0f).andThen(wristSubsystem.turnDownToPos(90))
-                .andThen(intakeSubsystem.ejectCargo().withTimeout(0.5))
+                .andThen(intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME))
                 .andThen(runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9))
                 .andThen(runDistanceWithSpeeds(0.5, 0.0, -3000.0).withTimeout(1.85))
                 .andThen(new AutoBalance(driveSubsystem, lightsSubsystem));
@@ -188,9 +189,9 @@ public class RobotContainer {
     // SCORES A CUBE HIGH THEN LEAVES COMMUNITY
     public Command scoreHighThenRunDistance() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.loadingPosCommand(1).withTimeout(1.3),
-                intakeSubsystem.runMotor(0.5).withTimeout(0.3),
-                group.startingPosCommand(1).withTimeout(1.4),
+                group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
+                group.startingPosCommand(1).withTimeout(AutoConstants.LOADING_TO_START_TIME),
                 runDistanceWithSpeeds(-0.3, 0.0, 3000.0).withTimeout(4.2));
     }
 
@@ -198,9 +199,9 @@ public class RobotContainer {
     // COMMUNITY
     public Command scoreHighThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.loadingPosCommand(1).withTimeout(1.3),
-                intakeSubsystem.runMotor(0.5).withTimeout(0.3),
-                group.startingPosCommand(1).withTimeout(1.4),
+                group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
+                group.startingPosCommand(1).withTimeout(AutoConstants.LOADING_TO_START_TIME),
                 runDistanceWithSpeeds(-0.5, 0.0, -3000.0).withTimeout(1.75),
                 new AutoBalance(driveSubsystem, lightsSubsystem));
     }
@@ -208,9 +209,9 @@ public class RobotContainer {
     // SCORES A CUBE HIGH THEN LEAVES COMMUNITY THEN ENGAGES ON CHARING PLATFORM
     public Command scoreHighThenLeaveCommunityThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.loadingPosCommand(1).withTimeout(1.2), // 1.3
-                intakeSubsystem.runMotor(0.3).withTimeout(0.30), // 0.4
-                group.startingPosCommand(1).withTimeout(1), // 1.4
+                group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME), // 1.3
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME), // 0.4
+                group.startingPosCommand(1).withTimeout(AutoConstants.LOADING_TO_START_TIME), // 1.4
                 wristSubsystem.stopWrist(),
                 runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(3),
                 runDistanceWithSpeeds(0.5, 0.0, -3000.0).withTimeout(2.05),
@@ -228,15 +229,16 @@ public class RobotContainer {
     public Command TwoPieceThenEngage() {
         // for wpi, might need to change desired angle and definitely distance gone
         // Figure out what side this works on, then mirror it for the opposite color
-        return new SequentialCommandGroup(intakeSubsystem.intake(-1).withTimeout(0.75),
+        return new SequentialCommandGroup(
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
                 new ParallelCommandGroup(driveSubsystem.driveWithRotation(0, 1, 0),
                         group.lowPosCommand(1),
                         intakeSubsystem.intake(1)),
                 new ParallelCommandGroup(driveSubsystem.driveWithRotation(180, -1, 0),
                         group.startingPosCommand(1),
                         intakeSubsystem.intake(0.1)).withTimeout(3),
-                group.highPosCommand(1).withTimeout(1.3),
-                intakeSubsystem.ejectCargo().withTimeout(0.5),
+                group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
                 new ParallelCommandGroup(group.startingPosCommand(1),
                         new WaitCommand(0.5).andThen(driveSubsystem.driveWithRotation(0, 0.5, .5)))
                         .withTimeout(0.5 + 1.75), // first value is the wait, second value is the drive time, and maybe
@@ -247,9 +249,10 @@ public class RobotContainer {
 
     public Command TwoPieceWithOdometry() {
         double allySideMultiplier = DriverStation.getAlliance().compareTo(Alliance.Red) == 0 ? 1 : -1;
-        return new SequentialCommandGroup(intakeSubsystem.intake(-1).withTimeout(0.75),
+        return new SequentialCommandGroup(
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
                 new ParallelRaceGroup(
-                        // group.lowPosCommand(1),
+                        group.lowPosCommand(1),
                         intakeSubsystem.runMotor(1),
                         new AutoDrive(driveSubsystem,
                                 new AutoDriveLineBuilder(-5, 0 * allySideMultiplier, 0 * allySideMultiplier)
@@ -266,14 +269,15 @@ public class RobotContainer {
                                         .useSlewAll(
                                                 true)
                                         .maxXYSpeed(0.5))),
-                // group.highPosCommand(1).withTimeout(1.3),
-                intakeSubsystem.intake(-1).withTimeout(0.5),
-                group.startingPosCommand(1));
+                group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
+                group.startingPosCommand(AutoConstants.LOADING_TO_START_TIME));
     }
 
     public Command TwoPieceThenEngageWithOdometry() {
         double allySideMultiplier = DriverStation.getAlliance().compareTo(Alliance.Red) == 0 ? 1 : -1;
-        return new SequentialCommandGroup(intakeSubsystem.intake(-1).withTimeout(0.75),
+        return new SequentialCommandGroup(
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
                 new ParallelRaceGroup(
                         group.lowPosCommand(1),
                         intakeSubsystem.intake(1),
@@ -289,9 +293,9 @@ public class RobotContainer {
                                 new AutoDriveLineBuilder(0, 0 * allySideMultiplier, 180 * allySideMultiplier)
                                         .xTolerance(0.05)
                                         .useSlewAll(true))),
-                group.highPosCommand(1).withTimeout(1.3),
-                intakeSubsystem.intake(-1).withTimeout(0.5),
-                new ParallelRaceGroup(group.startingPosCommand(1),
+                group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
+                new ParallelRaceGroup(group.startingPosCommand(AutoConstants.LOADING_TO_START_TIME),
                         new AutoDrive(driveSubsystem,
                                 new AutoDriveLineBuilder(1.75, -1.75 * allySideMultiplier, 0 * allySideMultiplier)
                                         .startTime(0.5)

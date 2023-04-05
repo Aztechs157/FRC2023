@@ -55,10 +55,10 @@ public final class Constants {
                 new Translation2d(-CENTER_TO_POD_METER, CENTER_TO_POD_METER),
                 new Translation2d(CENTER_TO_POD_METER, CENTER_TO_POD_METER),
                 new Translation2d(CENTER_TO_POD_METER, -CENTER_TO_POD_METER),
-                new Translation2d(-CENTER_TO_POD_METER, -CENTER_TO_POD_METER),
+                new Translation2d(-CENTER_TO_POD_METER, -CENTER_TO_POD_METER)
         };
 
-        public static final double SLEWRATE_VAL = 0.65;
+        public static final double SLEWRATE_VAL = 0.7;
         public static final double SLEW_ROTATE_VAL = 100;
         public static final double AUTO_SLEW_RATE = 1;
         public static final double AUTO_SLEW_ROTATE_VAL = 100;
@@ -68,6 +68,10 @@ public final class Constants {
         public static final ChassisSpeeds AUTO_SPEEDS = new ChassisSpeeds(-0.3, 0, 0);
         public static final double AUTO_DISTANCE = 3000000; // This value isn't used but will be if distance based
                                                             // autonomous is ever made, change if that is the case
+        public static final double EJECT_SPEED = 0.3;
+        public static final double EJECT_TIME = 0.3;
+        public static final double START_TO_LOADING_TIME = 1;
+        public static final double LOADING_TO_START_TIME = 1;
         public static final double TURN_ACCURACY_DEG = 20;
         public static final double DRIVE_ACCURACY = 20;
         public static final double BALANCE_ACCURACY_DEG = 2.5;
