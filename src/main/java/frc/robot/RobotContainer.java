@@ -128,6 +128,7 @@ public class RobotContainer {
         chooser.addOption("twoPiecethenEngage", TwoPieceThenEngage());
         chooser.addOption("twoPieceWithOdometry", TwoPieceWithOdometry());
         chooser.addOption("twoPieceThenEngageWithOdometry", TwoPieceThenEngageWithOdometry());
+        chooser.addOption("simpleTwoPiece", SimpleTwoPiece());
     }
 
     /**
@@ -226,22 +227,39 @@ public class RobotContainer {
                 new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
+    public Command SimpleTwoPiece() {
+        return new SequentialCommandGroup(
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED + .15).withTimeout(AutoConstants.EJECT_TIME),
+                new ParallelCommandGroup(
+                        group.lowPosCommand(1),
+                        intakeSubsystem.cubeMode(driverInputs, intakeSubsystem),
+                        runDistanceWithSpeeds(-0.5, 0, 6000).withTimeout(2.9)).withTimeout(3.2),
+                driveSubsystem.driveWithRotation(180, 0, 0),
+                new ParallelCommandGroup(group.startingPosCommand(1),
+                        runDistanceWithSpeeds(0.5, 0, -6000)).withTimeout(3.2),
+                group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME));
+    }
+
     public Command TwoPieceThenEngage() {
         // for wpi, might need to change desired angle and definitely distance gone
         // Figure out what side this works on, then mirror it for the opposite color
         return new SequentialCommandGroup(
-                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
-                new ParallelCommandGroup(driveSubsystem.driveWithRotation(0, 1, 0),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED + .15).withTimeout(AutoConstants.EJECT_TIME),
+                new ParallelCommandGroup(driveSubsystem.driveWithRotation(0, -1, 0),
                         group.lowPosCommand(1),
-                        intakeSubsystem.intake(1)),
-                new ParallelCommandGroup(driveSubsystem.driveWithRotation(180, -1, 0),
+                        intakeSubsystem.cubeMode(driverInputs, intakeSubsystem)),
+                new WaitCommand(5),
+                new ParallelCommandGroup(driveSubsystem.driveWithRotation(180, 1, 0),
                         group.startingPosCommand(1),
                         intakeSubsystem.intake(0.1)).withTimeout(3),
+                new WaitCommand(5),
                 group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME),
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
-                new ParallelCommandGroup(group.startingPosCommand(1),
-                        new WaitCommand(0.5).andThen(driveSubsystem.driveWithRotation(0, 0.5, .5)))
-                        .withTimeout(0.5 + 1.75), // first value is the wait, second value is the drive time, and maybe
+                // new ParallelCommandGroup(group.startingPosCommand(1),
+                // new WaitCommand(0.5).andThen(driveSubsystem.driveWithRotation(0, 0.5, .5)))
+                // .withTimeout(0.5 + 1.75), // first value is the wait, second value is the
+                // drive time, and maybe
                 // increase Y to adjust for charge station (if hit charge station
                 // side, increase Y) maybe add a forward to get further up platform
                 new AutoBalance(driveSubsystem, lightsSubsystem));
@@ -250,17 +268,13 @@ public class RobotContainer {
     public Command TwoPieceWithOdometry() {
         double allySideMultiplier = DriverStation.getAlliance().compareTo(Alliance.Red) == 0 ? 1 : -1;
         return new SequentialCommandGroup(
-                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED + .15).withTimeout(AutoConstants.EJECT_TIME),
                 new ParallelRaceGroup(
                         group.lowPosCommand(1),
-                        intakeSubsystem.runMotor(1),
+                        intakeSubsystem.cubeMode(driverInputs, intakeSubsystem),
                         new AutoDrive(driveSubsystem,
-                                new AutoDriveLineBuilder(-5, 0 * allySideMultiplier, 0 * allySideMultiplier)
-                                        .holdRotTillRotStarts(true)
-                                        .startRotAtX(-3.25)
-                                        .useSlewXY(true)
-                                        .xTolerance(0.25)
-                                        .maxXYSpeed(0.5))),
+                                new AutoDriveLineBuilder(-5, 0 * allySideMultiplier, 0 * allySideMultiplier))),
+                new WaitCommand(5),
                 new ParallelRaceGroup(group.startingPosCommand(1),
                         intakeSubsystem.runMotor(0.1),
                         new AutoDrive(driveSubsystem,
@@ -269,6 +283,7 @@ public class RobotContainer {
                                         .useSlewAll(
                                                 true)
                                         .maxXYSpeed(0.5))),
+                new WaitCommand(5),
                 group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME),
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
                 group.startingPosCommand(AutoConstants.LOADING_TO_START_TIME));
@@ -277,16 +292,12 @@ public class RobotContainer {
     public Command TwoPieceThenEngageWithOdometry() {
         double allySideMultiplier = DriverStation.getAlliance().compareTo(Alliance.Red) == 0 ? 1 : -1;
         return new SequentialCommandGroup(
-                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED + .1).withTimeout(AutoConstants.EJECT_TIME),
                 new ParallelRaceGroup(
                         group.lowPosCommand(1),
                         intakeSubsystem.intake(1),
                         new AutoDrive(driveSubsystem,
-                                new AutoDriveLineBuilder(5, 0 * allySideMultiplier, 0 * allySideMultiplier)
-                                        .holdRotTillRotStarts(true)
-                                        .startRotAtX(3.25)
-                                        .useSlewXY(true)
-                                        .xTolerance(0.05))),
+                                new AutoDriveLineBuilder(5, 0 * allySideMultiplier, 0 * allySideMultiplier))),
                 new ParallelRaceGroup(group.startingPosCommand(1),
                         intakeSubsystem.intake(0.1),
                         new AutoDrive(driveSubsystem,

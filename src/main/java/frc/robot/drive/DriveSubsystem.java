@@ -251,8 +251,8 @@ public class DriveSubsystem extends SubsystemBase {
         protected Optional<Double> yTolerance = Optional.empty();
         protected Optional<Double> rotTolerance = Optional.empty();
 
-        protected Double maxXSpeed = 1.0;
-        protected Double maxYSpeed = 1.0;
+        protected Double maxXSpeed = 0.8;
+        protected Double maxYSpeed = 0.8;
         protected Double maxRotSpeed = 65.0;
 
         protected double minX = 0.08;

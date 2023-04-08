@@ -46,9 +46,8 @@ public class IntakeSubsystem extends SubsystemBase {
         Command x = runOnce(() -> {
             lights.setClimb(Color.kGold, Color.kBlack, 3, 2, 2);
             setSolenoid(Value.kForward);
-            stoppedSpeed = 0;
-        }).andThen(run(() -> {
-        }).until(this::getSensor)).andThen(runOnce(() -> {
+            stoppedSpeed = 0.25;
+        }).andThen(runIntake(inputs).until(this::getSensor)).andThen(runOnce(() -> {
             setSolenoid(Value.kReverse);
             lights.setSolid(Color.kGold);
             stoppedSpeed = 0;

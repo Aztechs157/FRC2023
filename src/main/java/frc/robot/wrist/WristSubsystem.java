@@ -107,12 +107,12 @@ public class WristSubsystem extends SubsystemBase {
         private double wristPosition;
         public static PIDController pid = new PIDController(0.01, 0, 0);
         private double minElbowPos;
-        private double maxElbowPos;
+        private double maxElevatorPos;
 
-        public WristState(final double wristPosition, final double minArmPos, final double maxElbowPos) {
+        public WristState(final double wristPosition, final double minArmPos, final double maxElevatorPos) {
             this.wristPosition = wristPosition;
             this.minElbowPos = minArmPos;
-            this.maxElbowPos = maxElbowPos;
+            this.maxElevatorPos = maxElevatorPos;
         }
 
         public static final WristState start = new WristState(WristConstants.START_POS,
@@ -151,7 +151,7 @@ public class WristSubsystem extends SubsystemBase {
                 double carriagePosition) {
             // Runs the wrist for the states
             double pidVal = pid.calculate(wristPosition, this.wristPosition);
-            if ((elbowPosition > this.minElbowPos && elevatorPosition < this.maxElbowPos) || pidVal > 0) {
+            if ((elbowPosition > this.minElbowPos && elevatorPosition < this.maxElevatorPos) || pidVal > 0) {
                 return pidVal;
             }
 

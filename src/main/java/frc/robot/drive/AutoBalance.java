@@ -14,10 +14,10 @@ import frc.robot.cosmetics.PwmLEDs;
 public class AutoBalance extends CommandBase {
     private final DriveSubsystem drive;
 
-    private PIDController pid = new PIDController(0.008, 0, 0.001);
+    private PIDController pid = new PIDController(0.008, 0, 0.0011);
     // p = 0.008, d = 0.001, increase d first, then decrease p after
     private PwmLEDs lights;
-    private Integer count = 0;
+    public boolean balanced = false;
 
     // private final PwmLEDs lights;
 
@@ -44,20 +44,20 @@ public class AutoBalance extends CommandBase {
         var angleMultY = drive.getRobotYaw().getDegrees() > 0 ? -1 : 1;
 
         // Drives back and forth with pid until balanced on the platform
-        if (count < 10) {
-            count++;
+        if (Math.abs(drive.getRobotRoll().getDegrees() * angleMultX) >= AutoConstants.BALANCE_ACCURACY_DEG
+                && balanced == false) {
+            drive.set(new ChassisSpeeds(pid.calculate(drive.getRobotRoll().getDegrees() * angleMultX, 0), 0, 0));
+            lights.setDefault();
+            balanced = false;
+        } else if (Math.abs(drive.getRobotYaw().getDegrees() * angleMultY) <= AutoConstants.BALANCE_ACCURACY_DEG
+                && balanced == false) {
+            drive.set(new ChassisSpeeds(pid.calculate(drive.getRobotYaw().getDegrees() * angleMultY, 0), 0, 0));
+            lights.setDefault();
+            balanced = false;
         } else {
-            count = 0;
-            if (Math.abs(drive.getRobotRoll().getDegrees() * angleMultX) >= AutoConstants.BALANCE_ACCURACY_DEG) {
-                drive.set(new ChassisSpeeds(pid.calculate(drive.getRobotRoll().getDegrees() * angleMultX, 0), 0, 0));
-                lights.setDefault();
-            } else if (Math.abs(drive.getRobotYaw().getDegrees() * angleMultY) <= AutoConstants.BALANCE_ACCURACY_DEG) {
-                drive.set(new ChassisSpeeds(pid.calculate(drive.getRobotYaw().getDegrees() * angleMultY, 0), 0, 0));
-                lights.setDefault();
-            } else {
-                // drive.set(new ChassisSpeeds(0, 0, 0.001));
-                lights.setSolid(Color.kForestGreen);
-            }
+            // drive.set(new ChassisSpeeds(0, 0, 0.001));
+            lights.setSolid(Color.kForestGreen);
+            balanced = true;
         }
 
     }
@@ -66,6 +66,7 @@ public class AutoBalance extends CommandBase {
     @Override
     public void end(boolean interrupted) {
         lights.setDefault();
+        balanced = false;
         // drive.stop();
     }
 

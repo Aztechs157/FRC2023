@@ -12,17 +12,19 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.networktables.NetworkTable;
 import edu.wpi.first.networktables.NetworkTableInstance;
-import edu.wpi.first.wpilibj.AnalogInput;
+import edu.wpi.first.wpilibj.Counter;
+import edu.wpi.first.wpilibj.Counter.Mode;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.ElevatorConstants;
 import frc.robot.input.DriverInputs;
+import frc.robot.lib.NumberUtil;
 import frc.robot.statemachines.SubsystemGroup.SafetyLogic;
 
 public class ElevatorSubsystem extends SubsystemBase {
     private final CANSparkMax elevatorMotor = new CANSparkMax(ElevatorConstants.ELEVATOR_MOTOR_ID,
             MotorType.kBrushless);
-    private final AnalogInput elevator10Pot = new AnalogInput(ElevatorConstants.ELEVATOR_ANALOG_ID);
+    private final Counter elevatorAbsEncoder = new Counter(Mode.kSemiperiod);
     private double elevatorSpeed = 0.0;
 
     public void reset() {
@@ -32,17 +34,20 @@ public class ElevatorSubsystem extends SubsystemBase {
     /** Creates a new ElevatorSubsystem. */
     public ElevatorSubsystem() {
         elevatorMotor.setIdleMode(IdleMode.kBrake);
+        elevatorAbsEncoder.setSemiPeriodMode(true);
+        elevatorAbsEncoder.setUpSource(ElevatorConstants.ABS_ENCODER_ROTATION_ID);
+        elevatorAbsEncoder.reset();
     }
 
     public Command runElevator(final DriverInputs inputs) {
         return runEnd(() -> {
             final double speed = inputs.axis(DriverInputs.elevator).get();
-            runElevatorMotor(speed);
+            runElevatorMotor(-speed);
         }, () -> runElevatorMotor(0));
     }
 
     public double getElevatorPosition() {
-        return 2500 - elevator10Pot.getValue(); // kinda a hack, same dealio as carriage
+        return NumberUtil.ticksToDegs(elevatorAbsEncoder.getPeriod()); // kinda a hack, same dealio as carriage
     }
 
     public void runElevatorMotor(final double speed) {
