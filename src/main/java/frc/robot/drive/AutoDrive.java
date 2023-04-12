@@ -30,6 +30,7 @@ public class AutoDrive extends CommandBase {
     private final SlewRateLimiter slewx;
     private final SlewRateLimiter slewy;
     private final SlewRateLimiter slewr;
+    private int i = 0;
     public double startTime = 0;
 
     /** Creates a new AutoDrive. */
@@ -44,6 +45,7 @@ public class AutoDrive extends CommandBase {
         slewx = drive.slewx;
         slewy = drive.slewy;
         slewr = drive.slewr;
+
         // Use addRequirements() here to declare subsystem dependencies.
     }
 
@@ -97,7 +99,7 @@ public class AutoDrive extends CommandBase {
         }
         Pose2d pose = drive.getOdometryPose();
         Pose2d setPose = params.targetPose;
-        Rotation2d rot = drive.getRobotPitch();
+        Rotation2d rot = drive.getRobotYaw();
 
         // System.out.println(
         // "xDist: " + pose.getX() + "\nyDist: " + pose.getY() + "\nrot: " +
@@ -151,9 +153,12 @@ public class AutoDrive extends CommandBase {
         xVal = capVal(xVal, params.maxXSpeed, params.minX);
         yVal = capVal(yVal, params.maxYSpeed, params.minY);
         rotVal = capVal(rotVal, params.maxRotSpeed, params.minRot);
-
-        // System.out.println("xvcal: " + xVal + "\nyVal: " + yVal + "\nrotVal: " +
-        // rotVal);
+        i++;
+        if (i > 20) {
+            System.out.println("xvcal: " + xVal + "\nyVal: " + yVal + "\nrotVal: " +
+                    rotVal);
+            i = 0;
+        }
 
         drive.set(new ChassisSpeeds(xVal, yVal, -rotVal));
     }
@@ -177,10 +182,14 @@ public class AutoDrive extends CommandBase {
         Pose2d pose = drive.getOdometryPose();
         // if no tolerances return false, otherwise check tolerance on X and Y, and
         // tolerance on Rotation if applicable
-        return !(params.rotTolerance.isEmpty() && params.xTolerance.isEmpty() && params.yTolerance.isEmpty()) &&
+        var x = !(params.rotTolerance.isEmpty() && params.xTolerance.isEmpty() && params.yTolerance.isEmpty()) &&
                 (checkTolerance(params.targetPose.getX(), params.xTolerance, pose.getX()) &&
                         checkTolerance(params.targetPose.getY(), params.yTolerance, pose.getY()) &&
                         (!params.useRot || checkTolerance(params.targetPose.getRotation().getDegrees(),
                                 params.rotTolerance, pose.getRotation().getDegrees())));
+        if (x) {
+            System.out.println(x);
+        }
+        return x;
     }
 }

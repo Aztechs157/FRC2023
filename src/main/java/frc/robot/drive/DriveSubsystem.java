@@ -23,6 +23,7 @@ import edu.wpi.first.networktables.NetworkTableInstance;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 import frc.robot.Constants.AutoConstants;
@@ -38,11 +39,12 @@ public class DriveSubsystem extends SubsystemBase {
     // tune these values for auto (mostly p, maybe some d)
     public PIDController pidx = new PIDController(0.6, 0, 0);
     public PIDController pidy = new PIDController(0.6, 0, 0);
-    public PIDController pidr = new PIDController(0.5, 0, 0);
+    public PIDController pidr = new PIDController(0.1, 0, 0);
 
     public SlewRateLimiter slewx = new SlewRateLimiter(DriveConstants.AUTO_SLEW_RATE);
     public SlewRateLimiter slewy = new SlewRateLimiter(DriveConstants.AUTO_SLEW_RATE);
     public SlewRateLimiter slewr = new SlewRateLimiter(DriveConstants.AUTO_SLEW_ROTATE_VAL);
+    private Rotation2d tempRotVal = new Rotation2d(0);
 
     public SwervePod[] swervePods = new SwervePod[] {
             new SwervePod(DriveConstants.POD_CONFIGS[0], table.getSubTable("Pod 1")),
@@ -66,7 +68,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void resetGyro() {
         gyro.zeroYaw();
-        addGyroOffset(0);
+        // addGyroOffset(0);
     }
 
     public void resetDisplacement() {
@@ -91,7 +93,7 @@ public class DriveSubsystem extends SubsystemBase {
 
     public void driveDistanceWithRotation(double desiredAngle, double xSpeed, double ySpeed) {
         set(new ChassisSpeeds(xSpeed, ySpeed,
-                pidr.calculate(getRobotPitch().getDegrees(), desiredAngle)));
+                pidr.calculate(getRobotYaw().getDegrees(), desiredAngle)));
     }
 
     // TODO test this please, it might just work or just need a few negatives. it
@@ -99,7 +101,7 @@ public class DriveSubsystem extends SubsystemBase {
     public void driveDistanceOdometer(double xPos, double yPos, double angle) {
         var pose = odometer.getPoseMeters();
         set(new ChassisSpeeds(pidx.calculate(pose.getX(), xPos), pidy.calculate(pose.getY(), yPos),
-                pidr.calculate(getRobotPitch().getDegrees(), angle)));
+                pidr.calculate(getRobotYaw().getDegrees(), angle)));
     }
 
     public Command driveToPosWithAngleOdometry(double xPos, double yPos, double angle, double tolerance) {
@@ -124,6 +126,10 @@ public class DriveSubsystem extends SubsystemBase {
         }
     }
 
+    public Command stopCommand() {
+        return runOnce(() -> set(new ChassisSpeeds(0, 0, 0)));
+    }
+
     public void setSingle(final SwerveModuleState state) {
         swervePods[0].set(state);
     }
@@ -136,11 +142,11 @@ public class DriveSubsystem extends SubsystemBase {
     private final NetworkTable gyroTable = NetworkTableInstance.getDefault().getTable("157/Gyro");
 
     public Rotation2d getRobotYaw() {
-        return Rotation2d.fromDegrees(((-gyro.getYaw() + 180 + gyroOffset) % 360) - 180);
+        return Rotation2d.fromDegrees(((-tempRotVal.getDegrees() + 180 + gyroOffset) % 360) - 180);
     }
 
     public Command addGyroOffset(float degrees) {
-        return runOnce(() -> gyroOffset = degrees);
+        return new PrintCommand("resetting gyro").andThen(runOnce(() -> gyroOffset = degrees));
     }
 
     public double getRawRobotPitch() {
@@ -161,11 +167,20 @@ public class DriveSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        gyroTable.getEntry("Yaw").setDouble(gyro.getYaw());
+        gyroTable.getEntry("Yaw").setDouble(tempRotVal.getDegrees());
         gyroTable.getEntry("Pitch").setDouble(gyro.getPitch());
         gyroTable.getEntry("Roll").setDouble(gyro.getRoll());
         table.getEntry("Raw Drive Position").setDouble(getRawDrivePosition());
-        odometer.update(getRobotPitch(), getModulePositions());
+        odometer.update(getRobotYaw(), getModulePositions());
+        tempRotVal = Rotation2d.fromDegrees(gyro.getYaw());
+    }
+
+    public void resetOdometry() {
+        odometer.resetPosition(tempRotVal, getModulePositions(), new Pose2d(0, 0, tempRotVal));
+    }
+
+    public Command resetOdometryCommand() {
+        return runOnce(() -> resetOdometry());
     }
 
     public void resetDrivePosition() {
@@ -255,8 +270,8 @@ public class DriveSubsystem extends SubsystemBase {
         protected Double maxYSpeed = 0.8;
         protected Double maxRotSpeed = 65.0;
 
-        protected double minX = 0.08;
-        protected double minY = 0.08;
+        protected double minX = 0.001;
+        protected double minY = 0.001;
         protected double minRot = 0.1;
 
         protected boolean useSlewX = false;
@@ -276,7 +291,7 @@ public class DriveSubsystem extends SubsystemBase {
         }
 
         public AutoDriveLineBuilder(double xDist, double yDist, double targetAngle) {
-            targetPose = new Pose2d(xDist, yDist, Rotation2d.fromDegrees(0.0));
+            targetPose = new Pose2d(xDist, yDist, Rotation2d.fromDegrees(targetAngle));
         }
 
         public AutoDriveLineBuilder(Pose2d pose) {

@@ -32,6 +32,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.ParallelCommandGroup;
 import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import edu.wpi.first.wpilibj2.command.ProxyCommand;
 import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 import edu.wpi.first.wpilibj2.command.WaitCommand;
@@ -267,14 +268,24 @@ public class RobotContainer {
 
     public Command TwoPieceWithOdometry() {
         double allySideMultiplier = DriverStation.getAlliance().compareTo(Alliance.Red) == 0 ? 1 : -1;
-        return new SequentialCommandGroup(
+        return new SequentialCommandGroup(driveSubsystem.resetOdometryCommand(),
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED + .15).withTimeout(AutoConstants.EJECT_TIME),
                 new ParallelRaceGroup(
-                        group.lowPosCommand(1),
+                        // group.lowPosCommand(1),
                         intakeSubsystem.cubeMode(driverInputs, intakeSubsystem),
                         new AutoDrive(driveSubsystem,
-                                new AutoDriveLineBuilder(-5, 0 * allySideMultiplier, 0 * allySideMultiplier))),
+                                new AutoDriveLineBuilder(-5, 0 * allySideMultiplier, 0
+                                        * allySideMultiplier)
+                                        .xTolerance(
+                                                0.5)
+                                        .useSlewAll(
+                                                true)
+                                        .maxXYSpeed(0.25))),
+
+                driveSubsystem.stopCommand(),
+                new PrintCommand("testing 1"),
                 new WaitCommand(5),
+                new PrintCommand("testing 2"),
                 new ParallelRaceGroup(group.startingPosCommand(1),
                         intakeSubsystem.runMotor(0.1),
                         new AutoDrive(driveSubsystem,
@@ -308,7 +319,7 @@ public class RobotContainer {
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
                 new ParallelRaceGroup(group.startingPosCommand(AutoConstants.LOADING_TO_START_TIME),
                         new AutoDrive(driveSubsystem,
-                                new AutoDriveLineBuilder(1.75, -1.75 * allySideMultiplier, 0 * allySideMultiplier)
+                                new AutoDriveLineBuilder(1.75, -1.75 * allySideMultiplier, 180 * allySideMultiplier)
                                         .startTime(0.5)
                                         .startXAtY(-0.5 * allySideMultiplier)
                                         .holdXTillXStarts(true)
