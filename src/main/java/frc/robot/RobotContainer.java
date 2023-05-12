@@ -59,7 +59,7 @@ public class RobotContainer {
     private final SubsystemGroup group = new SubsystemGroup(elevatorSubsystem, carriageSubsystem, elbowSubsystem,
             wristSubsystem);
 
-    private final DriverInputs driverInputs = new DriverInputs();
+    private final DriverInputs driverInputs = DriverInputs.createFromChooser();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -103,8 +103,8 @@ public class RobotContainer {
         Command coneCommand = intakeSubsystem.coneMode(driverInputs, intakeSubsystem);
         Command cubeCommand = intakeSubsystem.cubeMode(driverInputs, intakeSubsystem);
 
-        driverInputs.button(DriverInputs.ConeIntake).whenPressed(coneCommand);
-        driverInputs.button(DriverInputs.ConeIntake).whenPressed(new InstantCommand(() -> {
+        driverInputs.button(DriverInputs.coneIntake).whenPressed(coneCommand);
+        driverInputs.button(DriverInputs.coneIntake).whenPressed(new InstantCommand(() -> {
             cubeCommand.cancel();
         }));
         driverInputs.button(DriverInputs.cubeIntake).whenPressed(cubeCommand);
@@ -185,6 +185,7 @@ public class RobotContainer {
                 .andThen(intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME))
                 .andThen(runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9))
                 .andThen(runDistanceWithSpeeds(0.5, 0.0, -3000.0).withTimeout(1.85))
+                // alexis was here
                 .andThen(new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
