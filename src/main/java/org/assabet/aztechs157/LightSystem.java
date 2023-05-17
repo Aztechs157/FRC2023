@@ -33,9 +33,44 @@ public class LightSystem {
     public record PixelData(int x, int t, int length) {
     }
 
+    @FunctionalInterface
     public interface Pattern {
-
         public Color getColor(final PixelData data);
+
+        public default Pattern speedBy(final double speed) {
+            return (data) -> {
+                final var t = (int) Math.floor(data.t * speed);
+                return getColor(new PixelData(data.x, t, data.length));
+            };
+        }
+
+        public default Pattern shiftByTime() {
+            return (data) -> {
+                final var x = (data.x - data.t) % data.length;
+                return getColor(new PixelData(x, data.t, data.length));
+            };
+        }
+
+        public static Pattern solid(final Color color) {
+            return (data) -> color;
+        }
+
+        public static Pattern stripe(final Color firstColor, final Color secondColor, final int firstLength,
+                final int secondLength) {
+
+            return (data) -> {
+                final var period = data.x % (firstLength + secondLength);
+                return period > firstLength ? firstColor : secondColor;
+            };
+        }
+
+        public static Pattern strobe(final Color firstColor, final Color secondColor, final int firstLength,
+                final int secondLength) {
+            return (data) -> {
+                final var period = data.t % (firstLength + secondLength);
+                return period > firstLength ? firstColor : secondColor;
+            };
+        }
     }
 
     public class RenderCommand extends CommandBase {
@@ -57,10 +92,8 @@ public class LightSystem {
         @Override
         public void execute() {
             for (int x = 0; x < length; x++) {
-                final var color = pattern.getColor(new PixelData(x, t, length));
-                if (color != null) {
-                    buffer.setLED(x, color);
-                }
+                final var data = new PixelData(x, t, length);
+                buffer.setLED(x, pattern.getColor(data));
             }
             t++;
             lights.setData(buffer);
@@ -71,4 +104,5 @@ public class LightSystem {
     public RenderCommand addPattern(final Pattern pattern) {
         return new RenderCommand(pattern);
     }
+
 }
