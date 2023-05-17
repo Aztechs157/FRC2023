@@ -29,7 +29,18 @@ public class LightSystem {
         lights.start();
     }
 
-    public record PixelData(int x, int t, int length) {
+    public record PixelData(int pos, int time, int length) {
+        public PixelData withPos(final int pos) {
+            return new PixelData(pos, time, length);
+        }
+
+        public PixelData withTime(final int time) {
+            return new PixelData(pos, time, length);
+        }
+
+        public PixelData withLength(final int length) {
+            return new PixelData(pos, time, length);
+        }
     }
 
     public class RenderCommand extends CommandBase {
