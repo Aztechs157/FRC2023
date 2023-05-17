@@ -11,12 +11,6 @@ import org.assabet.aztechs157.input.values.Button;
  * be used with {@link DynamicLayout} to allow hot-swapping of layouts.
  */
 public class MapLayout implements Layout {
-    public final String label;
-
-    public MapLayout(final String label) {
-        this.label = label;
-    }
-
     private final Map<Button.Key, Button> buttons = new HashMap<>();
     private final Map<Axis.Key, Axis> axes = new HashMap<>();
 
@@ -64,38 +58,5 @@ public class MapLayout implements Layout {
      */
     public Axis axis(final Axis.Key key) {
         return axes.get(key);
-    }
-
-    @Override
-    public String toString() {
-        final var layoutLabelFormat = "%s\n";
-        final var headerFormat = "\n%s:\n";
-        final var entryFormat = "%s -> %s\n";
-
-        final var builder = new StringBuilder();
-
-        builder.append(String.format(layoutLabelFormat, this.label));
-
-        if (!buttons.isEmpty()) {
-            builder.append(String.format(headerFormat, "Buttons"));
-            for (final var entry : buttons.entrySet()) {
-                builder.append(String.format(
-                        entryFormat,
-                        entry.getKey().label(),
-                        entry.getValue().label));
-            }
-        }
-
-        if (!axes.isEmpty()) {
-            builder.append(String.format(headerFormat, "Axes"));
-            for (final var entry : axes.entrySet()) {
-                builder.append(String.format(
-                        entryFormat,
-                        entry.getKey().label(),
-                        entry.getValue().label));
-            }
-        }
-
-        return builder.toString();
     }
 }

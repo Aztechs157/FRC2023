@@ -14,25 +14,23 @@ import edu.wpi.first.wpilibj.DriverStation;
  * {@link Axis}.
  */
 public class Axis {
-    public static record Key(String label) {
+    public static record Key() {
     }
 
     public static final Range kDeviceDefaultRange = new Range(-1, 1);
 
     private final DoubleSupplier value;
-    public final String label;
 
-    public Axis(final String label, final DoubleSupplier value) {
-        this.label = label;
+    public Axis(final DoubleSupplier value) {
         this.value = value;
     }
 
-    public static Axis fromDriverStation(final String label, final int deviceId, final int axisId) {
-        return new Axis(label, () -> DriverStation.getStickAxis(deviceId, axisId));
+    public static Axis fromDriverStation(final int deviceId, final int axisId) {
+        return new Axis(() -> DriverStation.getStickAxis(deviceId, axisId));
     }
 
     public static Axis always(final double value) {
-        return new Axis(value + "", () -> value);
+        return new Axis(() -> value);
     }
 
     public double get() {
@@ -40,7 +38,7 @@ public class Axis {
     }
 
     public Axis map(final DoubleUnaryOperator body) {
-        return new Axis(label, () -> body.applyAsDouble(get()));
+        return new Axis(() -> body.applyAsDouble(get()));
     }
 
     public Axis tap(final DoubleConsumer body) {

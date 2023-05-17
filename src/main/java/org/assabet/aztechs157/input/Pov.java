@@ -25,16 +25,16 @@ public class Pov {
         return degrees.getAsInt();
     }
 
-    public final Axis value = new Axis("Pov", () -> get());
+    public final Axis value = new Axis(() -> get());
 
-    public final Axis y = new Axis("Pov Y", () -> switch (get()) {
+    public final Axis y = new Axis(() -> switch (get()) {
         case UP_LEFT, UP, UP_RIGHT -> 1;
         case LEFT, CENTER, RIGHT -> 0;
         case DOWN_LEFT, DOWN, DOWN_RIGHT -> -1;
         default -> 0;
     });
 
-    public final Axis x = new Axis("Pov X", () -> switch (get()) {
+    public final Axis x = new Axis(() -> switch (get()) {
         case DOWN_RIGHT, RIGHT, UP_RIGHT -> 1;
         case DOWN, CENTER, UP -> 0;
         case DOWN_LEFT, LEFT, UP_LEFT -> -1;
@@ -52,7 +52,7 @@ public class Pov {
     public static final int UP_LEFT = 45 * 7;
 
     private Button buttonForValue(final int degrees, final String name) {
-        return new Button("Pov " + name, () -> get() == degrees);
+        return new Button(() -> get() == degrees);
     }
 
     public final Button center = buttonForValue(CENTER, "Center");

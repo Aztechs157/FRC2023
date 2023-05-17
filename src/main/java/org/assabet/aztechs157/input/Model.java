@@ -26,8 +26,8 @@ public class Model {
      * @param buttonId The button to model
      * @return The modeled {@link Button}
      */
-    public Button button(final String label, final int buttonId) {
-        return Button.fromDriverStation(label, deviceId, buttonId);
+    public Button button(final int buttonId) {
+        return Button.fromDriverStation(deviceId, buttonId);
     }
 
     /**
@@ -36,8 +36,8 @@ public class Model {
      * @param buttonId The axis to model
      * @return The modeled {@link Axis}
      */
-    public Axis axis(final String label, final int axisId) {
-        return Axis.fromDriverStation(label, deviceId, axisId);
+    public Axis axis(final int axisId) {
+        return Axis.fromDriverStation(deviceId, axisId);
     }
 
     /**

@@ -16,30 +16,30 @@ import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class DriverInputs extends DynamicLayout {
-    public static final Axis.Key intakeSpeed = new Axis.Key("Intake Speed");
-    public static final Axis.Key runIntakeMotorIn = new Axis.Key("Run Intake Motor In");
-    public static final Axis.Key runIntakeMotorOut = new Axis.Key("Run Intake Motor Out");
-    public static final Axis.Key runIntakeMotorInDriver = new Axis.Key("Run Intake Motor In via Driver");
-    public static final Axis.Key runIntakeMotorOutDriver = new Axis.Key("Run Intake Motor Out via Driver");
-    public static final Button.Key setIntakeSolenoidForward = new Button.Key("Set Intake Solenoid Forward");
-    public static final Button.Key setIntakeSolenoidBackward = new Button.Key("Set Intake Solenoid Backward");
-    public static final Button.Key lowPosition = new Button.Key("Set to low position");
-    public static final Button.Key midPosition = new Button.Key("Set to mid position");
-    public static final Button.Key highPosition = new Button.Key("Set to high position");
-    public static final Button.Key loadingPosition = new Button.Key("Set to loading position");
-    public static final Button.Key startPosition = new Button.Key("Set to start position");
-    public static final Button.Key autoBalance = new Button.Key("Run the balance on platform command");
-    public static final Button.Key ConeIntake = new Button.Key("set the robot to cone intake mode");
-    public static final Button.Key cubeIntake = new Button.Key("set the robot to cube intake mode");
-    public static final Button.Key CancelMode = new Button.Key("cancel the current mode, revert to old system.");
+    public static final Axis.Key intakeSpeed = new Axis.Key();
+    public static final Axis.Key runIntakeMotorIn = new Axis.Key();
+    public static final Axis.Key runIntakeMotorOut = new Axis.Key();
+    public static final Axis.Key runIntakeMotorInDriver = new Axis.Key();
+    public static final Axis.Key runIntakeMotorOutDriver = new Axis.Key();
+    public static final Button.Key setIntakeSolenoidForward = new Button.Key();
+    public static final Button.Key setIntakeSolenoidBackward = new Button.Key();
+    public static final Button.Key lowPosition = new Button.Key();
+    public static final Button.Key midPosition = new Button.Key();
+    public static final Button.Key highPosition = new Button.Key();
+    public static final Button.Key loadingPosition = new Button.Key();
+    public static final Button.Key startPosition = new Button.Key();
+    public static final Button.Key autoBalance = new Button.Key();
+    public static final Button.Key ConeIntake = new Button.Key();
+    public static final Button.Key cubeIntake = new Button.Key();
+    public static final Button.Key CancelMode = new Button.Key();
 
-    public static final Axis.Key driveSpeedX = new Axis.Key("Drive Speed X");
-    public static final Axis.Key driveSpeedY = new Axis.Key("Drive Speed Y");
-    public static final Axis.Key driveRotation = new Axis.Key("Drive Rotation");
-    public static final Axis.Key rotateWrist = new Axis.Key("Rotate Wrist");
-    public static final Axis.Key rotateElbow = new Axis.Key("Rotate Elbow");
-    public static final Axis.Key elevator = new Axis.Key("Lift Elevator");
-    public static final Axis.Key carriage = new Axis.Key("Lift Carriage");
+    public static final Axis.Key driveSpeedX = new Axis.Key();
+    public static final Axis.Key driveSpeedY = new Axis.Key();
+    public static final Axis.Key driveRotation = new Axis.Key();
+    public static final Axis.Key rotateWrist = new Axis.Key();
+    public static final Axis.Key rotateElbow = new Axis.Key();
+    public static final Axis.Key elevator = new Axis.Key();
+    public static final Axis.Key carriage = new Axis.Key();
 
     public static DriverInputs createFromChooser() {
         final SendableChooser<Layout> chooser = new SendableChooser<>();
@@ -60,7 +60,7 @@ public class DriverInputs extends DynamicLayout {
     private static final Rotation2d maxRotationPerSecond = Rotation2d.fromDegrees(65);
 
     private static Layout dualLogitechLayout() {
-        final var layout = new MapLayout("Default Eric/Connor Layout");
+        final var layout = new MapLayout();
         final var driver = new LogitechGamepadF310(0);
         final var operator = new LogitechGamepadF310(1);
 
@@ -74,7 +74,7 @@ public class DriverInputs extends DynamicLayout {
         layout.assign(runIntakeMotorInDriver, driver.rightTriggerHeld);
         layout.assign(runIntakeMotorOutDriver, driver.leftTriggerHeld);
 
-        layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
+        layout.assign(intakeSpeed, new Axis(() -> {
             if (Math.abs(operator.combinedTriggersHeld.get()) > Math.abs(driver.combinedTriggersHeld.get())) {
                 return operator.combinedTriggersHeld.get();
             }
@@ -101,7 +101,7 @@ public class DriverInputs extends DynamicLayout {
     }
 
     private static Layout flightStickLayout() {
-        final var layout = new MapLayout("driver flight, operator xbox");
+        final var layout = new MapLayout();
         final var driver = new LogitechExtreme3D(0);
         final var operator = new XboxOne(1);
 
@@ -112,7 +112,7 @@ public class DriverInputs extends DynamicLayout {
         layout.assign(driveRotation, driver.stickRotate.map(deadzone::apply).scaledBy(speedModifier)
                 .scaledBy(maxRotationPerSecond.getDegrees()));
         layout.assign(autoBalance, driver.button4);
-        layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
+        layout.assign(intakeSpeed, new Axis(() -> {
             double driverSpeed = driver.thumb.get() ? 1 : (driver.trigger.get() ? -1 : 0);
             if (Math.abs(operator.combinedTriggersHeld.get()) > Math.abs(driverSpeed)) {
                 return operator.combinedTriggersHeld.get();
@@ -143,7 +143,7 @@ public class DriverInputs extends DynamicLayout {
     }
 
     private static Layout doubleXBOXLayout() {
-        final var layout = new MapLayout("driver xbox, operator xbox");
+        final var layout = new MapLayout();
         final var driver = new XboxOne(0);
         final var operator = new XboxOne(1);
 
@@ -154,7 +154,7 @@ public class DriverInputs extends DynamicLayout {
         layout.assign(driveRotation, driver.rightStickX.map(deadzone::apply).scaledBy(speedModifier)
                 .scaledBy(maxRotationPerSecond.getDegrees()));
         layout.assign(autoBalance, driver.a);
-        layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
+        layout.assign(intakeSpeed, new Axis(() -> {
             if (Math.abs(operator.combinedTriggersHeld.get()) > Math.abs(driver.combinedTriggersHeld.get())) {
                 return operator.combinedTriggersHeld.get();
             }
@@ -183,7 +183,7 @@ public class DriverInputs extends DynamicLayout {
     }
 
     private static Layout demoLayout() {
-        final var layout = new MapLayout("driver xbox, operator xbox");
+        final var layout = new MapLayout();
         final var driver = new XboxOne(0);
         final var operator = new XboxOne(1);
 
@@ -194,7 +194,7 @@ public class DriverInputs extends DynamicLayout {
         layout.assign(driveRotation, driver.rightStickX.map(deadzone::apply).scaledBy(speedModifier)
                 .scaledBy(maxRotationPerSecond.getDegrees()));
         layout.assign(autoBalance, driver.a);
-        layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
+        layout.assign(intakeSpeed, new Axis(() -> {
             if (Math.abs(operator.combinedTriggersHeld.get()) > Math.abs(driver.combinedTriggersHeld.get())) {
                 return operator.combinedTriggersHeld.get();
             }

@@ -28,7 +28,7 @@ public class DynamicLayout implements Layout {
      * @return A {@link Button} and {@link Button.Key} representing the input
      */
     public Button button(final Button.Key key) {
-        return new Button(null, () -> getCurrent().button(key).get());
+        return new Button(() -> getCurrent().button(key).get());
     }
 
     /**
@@ -38,6 +38,6 @@ public class DynamicLayout implements Layout {
      * @return A {@link Axis} representing the input
      */
     public Axis axis(final Axis.Key key) {
-        return new Axis(null, () -> getCurrent().axis(key).get());
+        return new Axis(() -> getCurrent().axis(key).get());
     }
 }

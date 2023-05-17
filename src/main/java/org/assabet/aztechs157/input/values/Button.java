@@ -14,23 +14,21 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
  * {@link Button}.
  */
 public class Button {
-    public static record Key(String label) {
+    public static record Key() {
     }
 
     private final BooleanSupplier value;
-    public final String label;
 
-    public Button(final String label, final BooleanSupplier value) {
-        this.label = label;
+    public Button(final BooleanSupplier value) {
         this.value = value;
     }
 
-    public static Button fromDriverStation(final String label, final int deviceId, final int buttonId) {
-        return new Button(label, () -> DriverStation.getStickButton(deviceId, buttonId));
+    public static Button fromDriverStation(final int deviceId, final int buttonId) {
+        return new Button(() -> DriverStation.getStickButton(deviceId, buttonId));
     }
 
     public static Button always(final boolean value) {
-        return new Button(value + "", () -> value);
+        return new Button(() -> value);
     }
 
     public boolean get() {
@@ -48,7 +46,7 @@ public class Button {
     }
 
     public Button map(final UnaryOperator<Boolean> body) {
-        return new Button(label, () -> body.apply(get()));
+        return new Button(() -> body.apply(get()));
     }
 
     public Button tap(final BooleanConsumer body) {
@@ -77,12 +75,7 @@ public class Button {
     public static Button all(final Button first, final Button... rest) {
         // The first argument is explicit to prevent being given empty arrays
 
-        final var label = new StringBuilder(first.label);
-        for (final var input : rest) {
-            label.append(" + " + input.label);
-        }
-
-        return new Button(label.toString(), () -> {
+        return new Button(() -> {
             // Check each input individually
             // As soon as one input is false, return false
 
@@ -111,12 +104,7 @@ public class Button {
     public static Button any(final Button first, final Button... rest) {
         // The first argument is explicit to prevent being given empty arrays
 
-        final var label = new StringBuilder(first.label);
-        for (final var input : rest) {
-            label.append(" or " + input.label);
-        }
-
-        return new Button(label.toString(), () -> {
+        return new Button(() -> {
             // Check each input individually
             // As soon as one input is true, return true
 
