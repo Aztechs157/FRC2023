@@ -1,5 +1,7 @@
 package org.assabet.aztechs157.light;
 
+import java.util.function.ToIntFunction;
+
 import org.assabet.aztechs157.light.LightSystem.PixelData;
 
 import edu.wpi.first.wpilibj.util.Color;
@@ -8,23 +10,35 @@ import edu.wpi.first.wpilibj.util.Color;
 public interface LightPattern {
     public Color getColor(final PixelData data);
 
-    public default LightPattern speedBy(final double speed) {
+    public default LightPattern scaleTime(final int speed) {
+        return scaleTime((data) -> speed);
+    }
+
+    public default LightPattern scaleTime(final ToIntFunction<PixelData> speedFunc) {
         return (data) -> {
-            final var time = (int) Math.floor(data.time() * speed);
+            final var time = data.time() * speedFunc.applyAsInt(data);
             return getColor(data.withTime(time));
         };
     }
 
-    public default LightPattern shiftBy(final int offset) {
+    public default LightPattern scalePosition(final int scalar) {
+        return scalePosition((data) -> scalar);
+    }
+
+    public default LightPattern scalePosition(final ToIntFunction<PixelData> scalarFunc) {
         return (data) -> {
-            final var position = (data.position() - offset) % data.length();
+            final var position = data.position() * scalarFunc.applyAsInt(data);
             return getColor(data.withPosition(position));
         };
     }
 
-    public default LightPattern shiftByTime() {
+    public default LightPattern shiftPosition(final int offset) {
+        return shiftPosition((data) -> offset);
+    }
+
+    public default LightPattern shiftPosition(final ToIntFunction<PixelData> offsetFunc) {
         return (data) -> {
-            final var position = (data.position() - data.time()) % data.length();
+            final var position = (data.position() - offsetFunc.applyAsInt(data)) % data.length();
             return getColor(data.withPosition(position));
         };
     }
