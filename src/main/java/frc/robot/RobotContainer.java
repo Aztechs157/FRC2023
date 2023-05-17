@@ -59,7 +59,7 @@ public class RobotContainer {
     private final SubsystemGroup group = new SubsystemGroup(elevatorSubsystem, carriageSubsystem, elbowSubsystem,
             wristSubsystem);
 
-    private final DriverInputs driverInputs = new DriverInputs();
+    private final DriverInputs driverInputs = DriverInputs.createFromChooser();
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -117,19 +117,20 @@ public class RobotContainer {
     {
         Shuffleboard.getTab("Driver").add("Auto Choose", chooser);
         chooser.setDefaultOption("scoreHighThenLeaveCommunityThenEngage", scoreHighThenLeaveCommunityThenEngage());
-        chooser.addOption("WristDownThenEjectThenRunDistance", WristDownThenEjectThenRunDistance());
-        chooser.addOption("WristDownThenEjectThenPoorlyDock", WristDownThenEjectThenPoorlyDock());
-        chooser.addOption("WristDownThenEjectThenBetterDock", WristDownThenEjectThenBetterDock());
+        chooser.addOption("WristDownThenEjectThenRunDistance", wristDownThenEjectThenRunDistance());
+        chooser.addOption("WristDownThenEjectThenPoorlyDock", wristDownThenEjectThenPoorlyDock());
+        chooser.addOption("WristDownThenEjectThenBetterDock", wristDownThenEjectThenBetterDock());
         chooser.addOption("WristDownThenEjectThenLeaveCommunityThenBetterDock",
-                WristDownThenEjectThenLeaveCommunityThenBetterDock());
+                wristDownThenEjectThenLeaveCommunityThenBetterDock());
         chooser.addOption("scoreHighThenRunDistance", scoreHighThenRunDistance());
         chooser.addOption("scoreHighThenEngage", scoreHighThenEngage());
         chooser.addOption("leaveCommunityThenEngage", leaveCommunityThenEngage());
         chooser.addOption("everythingIsBrokenDoNothing", new InstantCommand(() -> System.out.println(":(")));
-        chooser.addOption("twoPiecethenEngage", TwoPieceThenEngage());
-        chooser.addOption("twoPieceWithOdometry", TwoPieceWithOdometry());
-        chooser.addOption("twoPieceThenEngageWithOdometry", TwoPieceThenEngageWithOdometry());
-        chooser.addOption("simpleTwoPiece", SimpleTwoPiece());
+        chooser.addOption("twoPiecethenEngage", twoPieceThenEngage());
+        chooser.addOption("twoPieceWithOdometry", twoPieceWithOdometry());
+        chooser.addOption("twoPieceThenEngageWithOdometry", twoPieceThenEngageWithOdometry());
+        chooser.addOption("simpleTwoPiece", simpleTwoPiece());
+        chooser.addOption("coneHigh", battlecryConeHigh());
     }
 
     /**
@@ -152,7 +153,7 @@ public class RobotContainer {
 
     // Do not use unless very specific case calls for it (INCASE WE WANT TO SCORE
     // MID)
-    public Command WristDownThenEjectThenRunDistance() {
+    public Command wristDownThenEjectThenRunDistance() {
         return driveSubsystem.addGyroOffset(180.0f).andThen(wristSubsystem.turnDownToPos(180))
                 .andThen(intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME))
                 .andThen(runDistanceWithSpeeds(-0.3, 0.0, 3000.0).withTimeout(4.2));
@@ -160,7 +161,7 @@ public class RobotContainer {
 
     // Do not use unless very specific case calls for it (IE: THE GYRO DOESN'T WORK
     // FOR WHATEVER REASON)
-    public Command WristDownThenEjectThenPoorlyDock() {
+    public Command wristDownThenEjectThenPoorlyDock() {
         return driveSubsystem.addGyroOffset(180.0f).andThen(wristSubsystem.turnDownToPos(180))
                 .andThen(intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME))
                 .andThen(runDistanceWithSpeeds(-0.5, 0.0, 3000.0).withTimeout(1.75))
@@ -171,7 +172,7 @@ public class RobotContainer {
 
     // Do not use unless very specific case calls for it (IE: OUR STATES AREN'T
     // WORKING)
-    public Command WristDownThenEjectThenBetterDock() {
+    public Command wristDownThenEjectThenBetterDock() {
         return driveSubsystem.addGyroOffset(180.0f).andThen(wristSubsystem.turnDownToPos(75))
                 .andThen(intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME))
                 .andThen(runDistanceWithSpeeds(-0.5, 0.0, 3000.0).withTimeout(1.75))
@@ -180,7 +181,7 @@ public class RobotContainer {
 
     // Do not use unless very specific case calls for it (IE: OUR STATES AREN'T
     // WORKING)
-    public Command WristDownThenEjectThenLeaveCommunityThenBetterDock() {
+    public Command wristDownThenEjectThenLeaveCommunityThenBetterDock() {
         return driveSubsystem.addGyroOffset(180.0f).andThen(wristSubsystem.turnDownToPos(90))
                 .andThen(intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME))
                 .andThen(runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9))
@@ -228,7 +229,7 @@ public class RobotContainer {
                 new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
-    public Command SimpleTwoPiece() {
+    public Command simpleTwoPiece() {
         return new SequentialCommandGroup(
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED + .15).withTimeout(AutoConstants.EJECT_TIME),
                 new ParallelCommandGroup(
@@ -242,7 +243,7 @@ public class RobotContainer {
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME));
     }
 
-    public Command TwoPieceThenEngage() {
+    public Command twoPieceThenEngage() {
         // for wpi, might need to change desired angle and definitely distance gone
         // Figure out what side this works on, then mirror it for the opposite color
         return new SequentialCommandGroup(
@@ -266,7 +267,7 @@ public class RobotContainer {
                 new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
-    public Command TwoPieceWithOdometry() {
+    public Command twoPieceWithOdometry() {
         double allySideMultiplier = DriverStation.getAlliance().compareTo(Alliance.Red) == 0 ? 1 : -1;
         return new SequentialCommandGroup(driveSubsystem.resetOdometryCommand(),
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED + .15).withTimeout(AutoConstants.EJECT_TIME),
@@ -300,7 +301,7 @@ public class RobotContainer {
                 group.startingPosCommand(AutoConstants.LOADING_TO_START_TIME));
     }
 
-    public Command TwoPieceThenEngageWithOdometry() {
+    public Command twoPieceThenEngageWithOdometry() {
         double allySideMultiplier = DriverStation.getAlliance().compareTo(Alliance.Red) == 0 ? 1 : -1;
         return new SequentialCommandGroup(
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED + .1).withTimeout(AutoConstants.EJECT_TIME),
@@ -330,20 +331,20 @@ public class RobotContainer {
                 new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
-    /*
-     * min arm with low carriage: 227
-     * max arm overall: 151
-     * min arm overall: 255
-     *
-     *
-     * max wrist: 258
-     * min wrist(?): 165
-     *
-     * max carriage: 2348
-     * min carriage: 952
-     *
-     * min elevator: 2034
-     * max elevator: 550
-     *
-     */
+    public Command battlecryConeHigh() {
+        return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
+                group.highPosCommand(1).withTimeout(AutoConstants.START_TO_HIGH_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
+                group.startingPosCommand(1).withTimeout(AutoConstants.HIGH_TO_START_TIME),
+                runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9));
+    }
+
+    public Command battlecryConeHighThenEngage() {
+        return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
+                group.highPosCommand(1).withTimeout(AutoConstants.START_TO_HIGH_TIME),
+                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
+                group.startingPosCommand(1).withTimeout(AutoConstants.HIGH_TO_START_TIME),
+                runDistanceWithSpeeds(-0.5, 0.0, -3000.0).withTimeout(1.75),
+                new AutoBalance(driveSubsystem, lightsSubsystem));
+    }
 }

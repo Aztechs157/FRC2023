@@ -12,8 +12,8 @@ import org.assabet.aztechs157.numbers.Deadzone;
 import org.assabet.aztechs157.numbers.Range;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.networktables.NetworkTableEntry;
-import edu.wpi.first.networktables.NetworkTableInstance;
+import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 
 public class DriverInputs extends DynamicLayout {
     public static final Axis.Key intakeSpeed = new Axis.Key("Intake Speed");
@@ -41,13 +41,19 @@ public class DriverInputs extends DynamicLayout {
     public static final Axis.Key elevator = new Axis.Key("Lift Elevator");
     public static final Axis.Key carriage = new Axis.Key("Lift Carriage");
 
-    private static final NetworkTableEntry entry = NetworkTableInstance.getDefault().getEntry("157/Drive/StickEnabled");
+    public static DriverInputs createFromChooser() {
+        final SendableChooser<Layout> chooser = new SendableChooser<>();
+        chooser.setDefaultOption("xbox", doubleXBOXLayout());
+        chooser.addOption("logitech", dualLogitechLayout());
+        chooser.addOption("flight", flightStickLayout());
+        chooser.addOption("demo", demoLayout());
+        Shuffleboard.getTab("Driver").add("Layout Choose", chooser);
 
-    public DriverInputs() {
-        super(() -> true ? doubleXBOXLayout() : flightStickLayout());
+        return new DriverInputs(chooser);
+    }
 
-        entry.setDefaultBoolean(false);
-        entry.setPersistent();
+    private DriverInputs(final SendableChooser<Layout> chooser) {
+        super(chooser::getSelected);
     }
 
     private static final Deadzone deadzone = Deadzone.forAxis(new Range(-0.2, 0.2));
@@ -142,6 +148,46 @@ public class DriverInputs extends DynamicLayout {
         final var operator = new XboxOne(1);
 
         final var speedModifier = 1;
+
+        layout.assign(driveSpeedX, driver.leftStickX.map(deadzone::apply).scaledBy(speedModifier));
+        layout.assign(driveSpeedY, driver.leftStickY.map(deadzone::apply).scaledBy(speedModifier));
+        layout.assign(driveRotation, driver.rightStickX.map(deadzone::apply).scaledBy(speedModifier)
+                .scaledBy(maxRotationPerSecond.getDegrees()));
+        layout.assign(autoBalance, driver.a);
+        layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
+            if (Math.abs(operator.combinedTriggersHeld.get()) > Math.abs(driver.combinedTriggersHeld.get())) {
+                return operator.combinedTriggersHeld.get();
+            }
+            return driver.combinedTriggersHeld.get();
+        }));
+        layout.assign(ConeIntake, driver.rightBumper);
+        layout.assign(cubeIntake, driver.leftBumper);
+
+        layout.assign(runIntakeMotorIn, operator.rightTriggerHeld.scaledBy(.1));
+        layout.assign(runIntakeMotorOut, operator.leftTriggerHeld.scaledBy(.1));
+        layout.assign(setIntakeSolenoidForward, operator.rightBumper);
+        layout.assign(setIntakeSolenoidBackward, operator.leftBumper);
+        layout.assign(lowPosition, operator.x);
+        layout.assign(midPosition, operator.a);
+        layout.assign(highPosition, operator.y);
+        layout.assign(loadingPosition, operator.b);
+        layout.assign(startPosition, operator.start);
+
+        layout.assign(rotateWrist, operator.rightStickY.map(deadzone::apply).scaledBy(-0.5));
+        layout.assign(rotateElbow, operator.leftStickY.map(deadzone::apply).scaledBy(-0.5));
+
+        layout.assign(elevator, operator.pov.y.scaledBy(-0.25));
+        layout.assign(carriage, operator.pov.x.scaledBy(0.75));
+
+        return layout;
+    }
+
+    private static Layout demoLayout() {
+        final var layout = new MapLayout("driver xbox, operator xbox");
+        final var driver = new XboxOne(0);
+        final var operator = new XboxOne(1);
+
+        final var speedModifier = 0.3;
 
         layout.assign(driveSpeedX, driver.leftStickX.map(deadzone::apply).scaledBy(speedModifier));
         layout.assign(driveSpeedY, driver.leftStickY.map(deadzone::apply).scaledBy(speedModifier));
