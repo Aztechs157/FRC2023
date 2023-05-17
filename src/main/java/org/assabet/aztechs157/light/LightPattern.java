@@ -11,21 +11,21 @@ public interface LightPattern {
     public default LightPattern speedBy(final double speed) {
         return (data) -> {
             final var time = (int) Math.floor(data.time() * speed);
-            return getColor(new PixelData(data.pos(), time, data.length()));
+            return getColor(data.withTime(time));
         };
     }
 
     public default LightPattern shiftBy(final int offset) {
         return (data) -> {
             final var pos = (data.pos() - offset) % data.length();
-            return getColor(new PixelData(pos, data.time(), data.length()));
+            return getColor(data.withPos(pos));
         };
     }
 
     public default LightPattern shiftByTime() {
         return (data) -> {
             final var pos = (data.pos() - data.time()) % data.length();
-            return getColor(new PixelData(pos, data.time(), data.length()));
+            return getColor(data.withPos(pos));
         };
     }
 
@@ -47,6 +47,17 @@ public interface LightPattern {
         };
     }
 
+    /**
+     * Note that `firstPattern` and `secondPattern` will have their `data.length`
+     * set to `firstLength` and `secondLength` respectively. This is so things such
+     * as gradients display properly.
+     *
+     * @param firstLength
+     * @param secondLength
+     * @param firstPattern
+     * @param secondPattern
+     * @return
+     */
     public static LightPattern alternate(
             final int firstLength,
             final int secondLength,
@@ -56,8 +67,8 @@ public interface LightPattern {
         return (data) -> {
             final var period = data.pos() % (firstLength + secondLength);
             return period > firstLength
-                    ? firstPattern.getColor(data)
-                    : secondPattern.getColor(data);
+                    ? firstPattern.getColor(data.withLength(firstLength))
+                    : secondPattern.getColor(data.withLength(secondLength));
         };
     }
 
@@ -72,9 +83,5 @@ public interface LightPattern {
                     ? firstPattern.getColor(data)
                     : secondPattern.getColor(data);
         };
-    }
-
-    public static LightPattern climb(int color1Length, int color2Length, Color color1, Color color2, double speed) {
-        return alternate(color1Length, color2Length, solid(color1), solid(color2)).shiftByTime().speedBy(speed);
     }
 }
