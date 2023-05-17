@@ -5,11 +5,7 @@ import edu.wpi.first.wpilibj.AddressableLEDBuffer;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-public class LightSystem {
-    private class InternalLightSubsystem extends SubsystemBase {
-    }
-
-    private InternalLightSubsystem internalSubsystem = new InternalLightSubsystem();
+public class LightSystem extends SubsystemBase {
 
     private final AddressableLED lights;
     private final AddressableLEDBuffer buffer;
@@ -29,17 +25,17 @@ public class LightSystem {
         lights.start();
     }
 
-    public record PixelData(int pos, int time, int length) {
-        public PixelData withPos(final int pos) {
-            return new PixelData(pos, time, length);
+    public record PixelData(int position, int time, int length) {
+        public PixelData withPosition(final int position) {
+            return new PixelData(position, time, length);
         }
 
         public PixelData withTime(final int time) {
-            return new PixelData(pos, time, length);
+            return new PixelData(position, time, length);
         }
 
         public PixelData withLength(final int length) {
-            return new PixelData(pos, time, length);
+            return new PixelData(position, time, length);
         }
     }
 
@@ -49,26 +45,25 @@ public class LightSystem {
 
         private RenderCommand(final LightPattern pattern) {
             this.pattern = pattern;
-            addRequirements(internalSubsystem);
+            addRequirements(LightSystem.this);
         }
 
-        private int t = 0;
+        private int time = 0;
 
         @Override
         public void initialize() {
-            t = 0;
+            time = 0;
         }
 
         @Override
         public void execute() {
-            for (int x = 0; x < length; x++) {
-                final var data = new PixelData(x, t, length);
-                buffer.setLED(x, pattern.getColor(data));
+            for (int position = 0; position < length; position++) {
+                final var data = new PixelData(position, time, length);
+                buffer.setLED(position, pattern.getColor(data));
             }
-            t++;
+            time++;
             lights.setData(buffer);
         }
-
     }
 
     public RenderCommand addPattern(final LightPattern pattern) {

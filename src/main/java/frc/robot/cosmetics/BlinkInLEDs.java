@@ -4,18 +4,16 @@
 
 package frc.robot.cosmetics;
 
-import edu.wpi.first.networktables.GenericEntry;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
-import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
-import edu.wpi.first.wpilibj.shuffleboard.ShuffleboardTab;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants.CosmeticConstants;
 
 // We are no longer using this file to run any code, it is merely left as a reference
 public class BlinkInLEDs extends SubsystemBase {
     public final Spark lightController = new Spark(CosmeticConstants.LIGHT_ID);
-    private ShuffleboardTab tab = Shuffleboard.getTab("LED");
-    private GenericEntry lightColor = tab.add("led color", CosmeticConstants.SOLID_YELLOW_VALUE).getEntry();
+    // private ShuffleboardTab tab = Shuffleboard.getTab("LED");
+    // private GenericEntry lightColor = tab.add("led color",
+    // CosmeticConstants.SOLID_YELLOW_VALUE).getEntry();
 
     /** Creates a new lights. */
     public BlinkInLEDs() {
