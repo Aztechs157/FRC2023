@@ -7,53 +7,67 @@ import org.assabet.aztechs157.light.LightSystem.PixelData;
 import edu.wpi.first.wpilibj.util.Color;
 
 @FunctionalInterface
-public interface LightPattern {
+public interface Pattern {
     public Color getColor(final PixelData data);
 
-    public default LightPattern scaleTime(final int speed) {
+    public default Pattern scaleTime(final int speed) {
         return scaleTime((data) -> speed);
     }
 
-    public default LightPattern scaleTime(final ToIntFunction<PixelData> speedFunc) {
+    public default Pattern scaleTime(final ToIntFunction<PixelData> speedFunc) {
         return (data) -> {
             final var time = data.time() * speedFunc.applyAsInt(data);
             return getColor(data.withTime(time));
         };
     }
 
-    public default LightPattern scalePosition(final int scalar) {
+    public default Pattern scalePosition(final int scalar) {
         return scalePosition((data) -> scalar);
     }
 
-    public default LightPattern scalePosition(final ToIntFunction<PixelData> scalarFunc) {
+    public default Pattern scalePosition(final ToIntFunction<PixelData> scalarFunc) {
         return (data) -> {
             final var position = data.position() * scalarFunc.applyAsInt(data);
             return getColor(data.withPosition(position));
         };
     }
 
-    public default LightPattern shiftPosition(final int offset) {
+    public default Pattern shiftPosition(final int offset) {
         return shiftPosition((data) -> offset);
     }
 
-    public default LightPattern shiftPosition(final ToIntFunction<PixelData> offsetFunc) {
+    public default Pattern shiftPosition(final ToIntFunction<PixelData> offsetFunc) {
         return (data) -> {
             final var position = (data.position() - offsetFunc.applyAsInt(data)) % data.maxPosition();
             return getColor(data.withPosition(position));
         };
     }
 
-    public static LightPattern solid(final Color color) {
+    public static Pattern solid(final Color color) {
         return (data) -> color;
     }
 
-    public static LightPattern gradient(final Color startColor, final Color endColor) {
+    public static Pattern gradientUsingPosition(final Color startColor, final Color endColor) {
         final var diffRed = endColor.red - startColor.red;
         final var diffGreen = endColor.green - startColor.green;
         final var diffBlue = endColor.blue - startColor.blue;
 
         return (data) -> {
             final var percentFade = data.position() / data.maxPosition();
+            final var red = (diffRed * percentFade) + startColor.red;
+            final var green = (diffGreen * percentFade) + startColor.green;
+            final var blue = (diffBlue * percentFade) + startColor.blue;
+            return new Color(red, green, blue);
+        };
+    }
+
+    public static Pattern gradientUsingTime(final Color startColor, final Color endColor) {
+        final var diffRed = endColor.red - startColor.red;
+        final var diffGreen = endColor.green - startColor.green;
+        final var diffBlue = endColor.blue - startColor.blue;
+
+        return (data) -> {
+            final var percentFade = data.time() / data.maxTime();
             final var red = (diffRed * percentFade) + startColor.red;
             final var green = (diffGreen * percentFade) + startColor.green;
             final var blue = (diffBlue * percentFade) + startColor.blue;
@@ -72,11 +86,11 @@ public interface LightPattern {
      * @param secondPattern
      * @return
      */
-    public static LightPattern alternate(
+    public static Pattern alternate(
             final int firstLength,
             final int secondLength,
-            final LightPattern firstPattern,
-            final LightPattern secondPattern) {
+            final Pattern firstPattern,
+            final Pattern secondPattern) {
 
         return (data) -> {
             final var period = data.position() % (firstLength + secondLength);
@@ -86,11 +100,11 @@ public interface LightPattern {
         };
     }
 
-    public static LightPattern strobe(
+    public static Pattern strobe(
             final int firstLength,
             final int secondLength,
-            final LightPattern firstPattern,
-            final LightPattern secondPattern) {
+            final Pattern firstPattern,
+            final Pattern secondPattern) {
         return (data) -> {
             final var period = data.time() % (firstLength + secondLength);
             return period > firstLength

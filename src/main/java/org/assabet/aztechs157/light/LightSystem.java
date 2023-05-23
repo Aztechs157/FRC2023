@@ -26,7 +26,7 @@ public class LightSystem extends SubsystemBase {
         lights.start();
     }
 
-    private int defaultTimeCycle = (int) Math.floor(1 / TimedRobot.kDefaultPeriod);
+    private int defaultTimeCycle = (int) Math.floor(5 / TimedRobot.kDefaultPeriod);
 
     public LightSystem withDefaultTimeCycle(final int timeCycle) {
         this.defaultTimeCycle = timeCycle;
@@ -34,6 +34,14 @@ public class LightSystem extends SubsystemBase {
     }
 
     public record PixelData(int position, int time, int maxPosition, int maxTime) {
+        public int position() {
+            return position % maxPosition;
+        }
+
+        public int time() {
+            return time % maxTime;
+        }
+
         public PixelData withPosition(final int position) {
             return new PixelData(position, time, maxPosition, maxTime);
         }
@@ -53,9 +61,9 @@ public class LightSystem extends SubsystemBase {
 
     public class RenderCommand extends CommandBase {
 
-        private final LightPattern pattern;
+        private final Pattern pattern;
 
-        private RenderCommand(final LightPattern pattern) {
+        private RenderCommand(final Pattern pattern) {
             this.pattern = pattern;
             addRequirements(LightSystem.this);
         }
@@ -78,7 +86,7 @@ public class LightSystem extends SubsystemBase {
         }
     }
 
-    public RenderCommand addPattern(final LightPattern pattern) {
+    public RenderCommand addPattern(final Pattern pattern) {
         return new RenderCommand(pattern);
     }
 }

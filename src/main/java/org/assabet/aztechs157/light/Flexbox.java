@@ -3,16 +3,16 @@ package org.assabet.aztechs157.light;
 import java.util.ArrayList;
 
 public class Flexbox {
-    private ArrayList<LightPattern> patterns = new ArrayList<>();
+    private ArrayList<Pattern> patterns = new ArrayList<>();
     private ArrayList<Integer> units = new ArrayList<>();
 
-    public Flexbox add(final int unit, final LightPattern pattern) {
+    public Flexbox add(final int unit, final Pattern pattern) {
         patterns.add(pattern);
         units.add(unit);
         return this;
     }
 
-    private LightPattern intoPattern(final boolean flag) {
+    private Pattern intoPattern(final boolean flag) {
         final var breakpoints = new ArrayList<Integer>(units.size());
 
         var totalUnits = 0;
@@ -40,15 +40,16 @@ public class Flexbox {
                 }
             }
 
+            // TODO: Send `data` with proper maxPosition/maxTime
             return patterns.get(highest).getColor(data);
         };
     }
 
-    public LightPattern buildUsingPosition() {
+    public Pattern buildUsingPosition() {
         return intoPattern(true);
     }
 
-    public LightPattern buildUsingTime() {
+    public Pattern buildUsingTime() {
         return intoPattern(false);
     }
 
