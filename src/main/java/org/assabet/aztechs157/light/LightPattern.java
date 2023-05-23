@@ -38,7 +38,7 @@ public interface LightPattern {
 
     public default LightPattern shiftPosition(final ToIntFunction<PixelData> offsetFunc) {
         return (data) -> {
-            final var position = (data.position() - offsetFunc.applyAsInt(data)) % data.length();
+            final var position = (data.position() - offsetFunc.applyAsInt(data)) % data.maxPosition();
             return getColor(data.withPosition(position));
         };
     }
@@ -53,7 +53,7 @@ public interface LightPattern {
         final var diffBlue = endColor.blue - startColor.blue;
 
         return (data) -> {
-            final var percentFade = data.position() / data.length();
+            final var percentFade = data.position() / data.maxPosition();
             final var red = (diffRed * percentFade) + startColor.red;
             final var green = (diffGreen * percentFade) + startColor.green;
             final var blue = (diffBlue * percentFade) + startColor.blue;
@@ -81,8 +81,8 @@ public interface LightPattern {
         return (data) -> {
             final var period = data.position() % (firstLength + secondLength);
             return period > firstLength
-                    ? firstPattern.getColor(data.withLength(firstLength))
-                    : secondPattern.getColor(data.withLength(secondLength));
+                    ? firstPattern.getColor(data.withMaxPosition(firstLength))
+                    : secondPattern.getColor(data.withMaxPosition(secondLength));
         };
     }
 
