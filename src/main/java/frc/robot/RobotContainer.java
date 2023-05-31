@@ -25,6 +25,7 @@ import edu.wpi.first.cameraserver.CameraServer;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.DriverStation;
+import edu.wpi.first.wpilibj.DoubleSolenoid.Value;
 import edu.wpi.first.wpilibj.DriverStation.Alliance;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
@@ -334,7 +335,8 @@ public class RobotContainer {
     public Command battlecryConeHigh() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
                 group.highPosCommand(1).withTimeout(AutoConstants.START_TO_HIGH_TIME),
-                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
+                new InstantCommand(() -> intakeSubsystem.setSolenoid(
+                        Value.kForward)),
                 group.startingPosCommand(1).withTimeout(AutoConstants.HIGH_TO_START_TIME),
                 runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(2.9));
     }

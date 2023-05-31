@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.Counter.Mode;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Constants.ElbowConstants;
 import frc.robot.input.DriverInputs;
 import frc.robot.lib.NumberUtil;
@@ -151,9 +152,10 @@ public class ElbowSubsystem extends SubsystemBase {
                     // System.out.println(s);
                     break;
                 case high:
-                    if (elevatorPosition < ElbowConstants.SAFETY_ELEVATOR_LIMIT_HIGH
+                    if (elevatorPosition > ElbowConstants.SAFETY_ELEVATOR_LIMIT_HIGH
                             || elbowPosition < this.elbowPosition) {
                         s = this.slew.calculate(this.elbowUpPid.calculate(elbowPosition, this.elbowPosition));
+                        System.out.println(s);
                     }
                     break;
                 default:
