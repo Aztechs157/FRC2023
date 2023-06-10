@@ -175,7 +175,7 @@ public final class Constants {
     public static class ElevatorConstants {
         public static final int ELEVATOR_MOTOR_ID = 16;
         public static final Range OLD_LIMITS = new Range(135, 300);
-        public static final Range ELEVATOR_LIMITS = new Range(62, 236); // end is the bottom most and start is
+        public static final Range ELEVATOR_LIMITS = new Range(94, 270); // end is the bottom most and start is
                                                                         // the top most
         public static final int ABS_ENCODER_ROTATION_ID = 9;
 
@@ -217,7 +217,7 @@ public final class Constants {
     public static class CarriageConstants {
         public static final int CARRIAGE_MOTOR_ID = 17;
         public static final Range OLD_LIMITS = new Range(2015, 3350);
-        public static final Range CARRIAGE_LIMITS = new Range(770, 2020);
+        public static final Range CARRIAGE_LIMITS = new Range(825, 1865);
         public static final int CARRIAGE_ANALOG_ID = 0;
 
         public static final double START_POS = toNewRange(2165, OLD_LIMITS, CARRIAGE_LIMITS);// 2015;
