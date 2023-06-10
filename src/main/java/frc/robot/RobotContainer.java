@@ -131,7 +131,7 @@ public class RobotContainer {
         chooser.addOption("twoPieceWithOdometry", twoPieceWithOdometry());
         chooser.addOption("twoPieceThenEngageWithOdometry", twoPieceThenEngageWithOdometry());
         chooser.addOption("simpleTwoPiece", simpleTwoPiece());
-        chooser.addOption("coneHigh", battlecryConeHigh());
+        chooser.addOption("coneHigh", battlecryConeHighThenEngage());
     }
 
     /**
@@ -203,19 +203,19 @@ public class RobotContainer {
     // COMMUNITY
     public Command scoreHighThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME),
+                group.highPosCommand(1).withTimeout(AutoConstants.START_TO_HIGH_TIME),
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
-                group.startingPosCommand(1).withTimeout(AutoConstants.LOADING_TO_START_TIME),
-                runDistanceWithSpeeds(-0.5, 0.0, -3000.0).withTimeout(1.75),
+                group.startingPosCommand(1).withTimeout(AutoConstants.HIGH_TO_START_TIME),
+                runDistanceWithSpeeds(-0.5, 0.0, 3000.0).withTimeout(1.75),
                 new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 
     // SCORES A CUBE HIGH THEN LEAVES COMMUNITY THEN ENGAGES ON CHARING PLATFORM
     public Command scoreHighThenLeaveCommunityThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.loadingPosCommand(1).withTimeout(AutoConstants.START_TO_LOADING_TIME), // 1.3
+                group.highPosCommand(1).withTimeout(AutoConstants.START_TO_HIGH_TIME), // 1.3
                 intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME), // 0.4
-                group.startingPosCommand(1).withTimeout(AutoConstants.LOADING_TO_START_TIME), // 1.4
+                group.startingPosCommand(1).withTimeout(AutoConstants.HIGH_TO_START_TIME), // 1.4
                 wristSubsystem.stopWrist(),
                 runDistanceWithSpeeds(-0.5, 0.0, 6000.0).withTimeout(3),
                 runDistanceWithSpeeds(0.5, 0.0, -3000.0).withTimeout(2.05),
@@ -343,10 +343,11 @@ public class RobotContainer {
 
     public Command battlecryConeHighThenEngage() {
         return new SequentialCommandGroup(driveSubsystem.addGyroOffset(180),
-                group.highPosCommand(1).withTimeout(AutoConstants.START_TO_HIGH_TIME),
-                intakeSubsystem.runMotor(AutoConstants.EJECT_SPEED).withTimeout(AutoConstants.EJECT_TIME),
-                group.startingPosCommand(1).withTimeout(AutoConstants.HIGH_TO_START_TIME),
-                runDistanceWithSpeeds(-0.5, 0.0, -3000.0).withTimeout(1.75),
+                group.highPosCommand(1).withTimeout(AutoConstants.START_TO_HIGH_TIME + .3),
+                new InstantCommand(() -> intakeSubsystem.setSolenoid(
+                        Value.kForward)).withTimeout(AutoConstants.EJECT_TIME),
+                group.startingPosCommand(1).withTimeout(AutoConstants.HIGH_TO_START_TIME + 1.27),
+                runDistanceWithSpeeds(-0.5, 0.0, 3000.0).withTimeout(1.35),
                 new AutoBalance(driveSubsystem, lightsSubsystem));
     }
 }
