@@ -138,20 +138,11 @@ public class SwervePod {
     private double computeShortestDelta(final double initialDelta) {
         Expect.number(initialDelta).greaterOrEqual(0).lessOrEqual(360);
 
-        if (initialDelta < 90) {
-            reversed = false;
+        if (initialDelta < 180) {
             return initialDelta;
-
-        } else if (initialDelta < 270) {
-            reversed = true;
-            return initialDelta - 180;
-
-        } else if (initialDelta <= 360) {
-            reversed = false;
+        } else {
             return initialDelta - 360;
         }
-
-        throw new RuntimeException("Above Expect.number() should have covered this.");
     }
 
     private final PIDController anglePid = new PIDController(DriveConstants.ANGLE_KP, 0, DriveConstants.ANGLE_KD);

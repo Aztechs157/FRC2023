@@ -58,9 +58,6 @@ public final class Constants {
                 new Translation2d(-CENTER_TO_POD_METER, -CENTER_TO_POD_METER)
         };
 
-        public static final double INCREASE_SLEWRATE_VAL = 0.7;
-        public static final double DECREASE_SLEWRATE_VAL = 1.5;
-        public static final double SLEW_ROTATE_VAL = 100;
         public static final double AUTO_SLEW_RATE = 1;
         public static final double AUTO_SLEW_ROTATE_VAL = 1;
     }

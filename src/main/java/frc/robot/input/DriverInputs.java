@@ -149,9 +149,11 @@ public class DriverInputs extends DynamicLayout {
 
         final var speedModifier = 1;
 
-        layout.assign(driveSpeedX, driver.leftStickX.map(deadzone::apply).scaledBy(speedModifier));
-        layout.assign(driveSpeedY, driver.leftStickY.map(deadzone::apply).scaledBy(speedModifier));
-        layout.assign(driveRotation, driver.rightStickX.map(deadzone::apply).scaledBy(speedModifier)
+        final Deadzone xboxDeadzone = Deadzone.forAxis(new Range(-0.05, 0.05));
+
+        layout.assign(driveSpeedX, driver.leftStickX.map(xboxDeadzone::apply).scaledBy(speedModifier));
+        layout.assign(driveSpeedY, driver.leftStickY.map(xboxDeadzone::apply).scaledBy(speedModifier));
+        layout.assign(driveRotation, driver.rightStickX.map(xboxDeadzone::apply).scaledBy(speedModifier)
                 .scaledBy(maxRotationPerSecond.getDegrees()));
         layout.assign(autoBalance, driver.a);
         layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
@@ -173,8 +175,8 @@ public class DriverInputs extends DynamicLayout {
         layout.assign(loadingPosition, operator.b);
         layout.assign(startPosition, operator.start);
 
-        layout.assign(rotateWrist, operator.rightStickY.map(deadzone::apply).scaledBy(-0.75));
-        layout.assign(rotateElbow, operator.leftStickY.map(deadzone::apply).scaledBy(-0.75));
+        layout.assign(rotateWrist, operator.rightStickY.map(xboxDeadzone::apply).scaledBy(-0.75));
+        layout.assign(rotateElbow, operator.leftStickY.map(xboxDeadzone::apply).scaledBy(-0.75));
 
         layout.assign(elevator, operator.pov.y.scaledBy(-0.50));
         layout.assign(carriage, operator.pov.x.scaledBy(0.95));
