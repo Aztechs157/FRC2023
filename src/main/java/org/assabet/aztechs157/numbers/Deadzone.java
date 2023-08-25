@@ -1,5 +1,7 @@
 package org.assabet.aztechs157.numbers;
 
+import org.assabet.aztechs157.input.values.Axis;
+
 public class Deadzone {
     public final Range deadzone;
     public final Range full;
@@ -7,7 +9,7 @@ public class Deadzone {
     public final RangeConverter rightConverter;
 
     public static Deadzone forAxis(final Range deadzone) {
-        return new Deadzone(deadzone, new Range(-1, 1), 0);
+        return new Deadzone(deadzone, Axis.kDeviceDefaultRange, 0);
     }
 
     public Deadzone(final Range deadzone, final Range full, final double fullCenter) {
