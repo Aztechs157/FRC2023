@@ -112,7 +112,13 @@ public class DriveSubsystem extends SubsystemBase {
     }
 
     public void set(final ChassisSpeeds inputSpeeds) {
-        final var speeds = ChassisSpeeds.fromFieldRelativeSpeeds(inputSpeeds, getRobotYaw());
+        ChassisSpeeds speeds;
+        if (DriveConstants.FIELD_ORIENTED_ENABLED) {
+            speeds = ChassisSpeeds.fromFieldRelativeSpeeds(inputSpeeds, getRobotYaw());
+        } else {
+            speeds = inputSpeeds;
+        }
+
         final var states = kinematics.toSwerveModuleStates(speeds);
 
         for (var i = 0; i < states.length; i++) {

@@ -1,6 +1,7 @@
 package frc.robot.drive;
 
-import org.assabet.aztechs157.Expect;
+import org.assabet.aztechs157.Sanity;
+import org.assabet.aztechs157.numbers.Range;
 
 import com.ctre.phoenix.sensors.CANCoder;
 import com.revrobotics.CANSparkMax;
@@ -38,6 +39,8 @@ public class SwervePod {
         angleMotor.setInverted(true);
         angleEncoder.configSensorDirection(false);
     }
+
+    public static final Range CIRCLE_RANGE = new Range(0, 360);
 
     public void set(final SwerveModuleState state) {
         goToAngle(wrapDegrees(state.angle.getDegrees()));
@@ -90,7 +93,7 @@ public class SwervePod {
             wrapped += 360;
         }
 
-        Expect.number(wrapped).greaterOrEqual(0).lessOrEqual(360);
+        Sanity.check(wrapped).containedWithin(CIRCLE_RANGE);
         return wrapped;
     }
 
@@ -121,22 +124,22 @@ public class SwervePod {
     private double computeInitialDelta(final double target) {
         final double initial = getCurrentAngle();
 
-        Expect.number(target).greaterOrEqual(0).lessOrEqual(360);
-        Expect.number(initial).greaterOrEqual(0).lessOrEqual(360);
+        Sanity.check(target).containedWithin(CIRCLE_RANGE);
+        Sanity.check(initial).containedWithin(CIRCLE_RANGE);
 
         var initialDelta = target - initial;
-        Expect.number(initialDelta).greaterOrEqual(-360).lessOrEqual(360);
+        Sanity.check(initialDelta).greaterOrEqual(-360).lessOrEqual(360);
 
         if (initialDelta < 0) {
             initialDelta += 360;
         }
-        Expect.number(initialDelta).greaterOrEqual(0).lessOrEqual(360);
+        Sanity.check(initialDelta).containedWithin(CIRCLE_RANGE);
 
         return initialDelta;
     }
 
     private double computeShortestDelta(final double initialDelta) {
-        Expect.number(initialDelta).greaterOrEqual(0).lessOrEqual(360);
+        Sanity.check(initialDelta).containedWithin(CIRCLE_RANGE);
 
         if (initialDelta < 180) {
             return initialDelta;
