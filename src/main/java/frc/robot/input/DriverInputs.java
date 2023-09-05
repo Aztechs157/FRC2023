@@ -147,7 +147,7 @@ public class DriverInputs extends DynamicLayout {
         final var driver = new XboxOne(0);
         final var operator = new XboxOne(1);
 
-        final var speedModifier = 1;
+        final var speedModifier = 0.2;
 
         final Deadzone xboxDeadzone = Deadzone.forAxis(new Range(-0.05, 0.05));
 
