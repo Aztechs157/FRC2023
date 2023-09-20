@@ -57,7 +57,7 @@ public class DriverInputs extends DynamicLayout {
     }
 
     private static final Deadzone deadzone = Deadzone.forAxis(new Range(-0.2, 0.2));
-    private static final Rotation2d maxRotationPerSecond = Rotation2d.fromDegrees(65);
+    private static final Rotation2d maxRotationPerSecond = Rotation2d.fromDegrees(130);
 
     private static Layout dualLogitechLayout() {
         final var layout = new MapLayout("Default Eric/Connor Layout");
@@ -147,9 +147,9 @@ public class DriverInputs extends DynamicLayout {
         final var driver = new XboxOne(0);
         final var operator = new XboxOne(1);
 
-        final var speedModifier = 0.2;
+        final var speedModifier = 1;
 
-        final Deadzone xboxDeadzone = Deadzone.forAxis(new Range(-0.05, 0.05));
+        final Deadzone xboxDeadzone = Deadzone.forAxis(new Range(-0.1, 0.1));
 
         layout.assign(driveSpeedX, driver.leftStickX.map(xboxDeadzone::apply).scaledBy(speedModifier));
         layout.assign(driveSpeedY, driver.leftStickY.map(xboxDeadzone::apply).scaledBy(speedModifier));

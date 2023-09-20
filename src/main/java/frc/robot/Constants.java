@@ -35,7 +35,7 @@ public final class Constants {
     }
 
     public static class DriveConstants {
-        public static final boolean FIELD_ORIENTED_ENABLED = false;
+        public static final boolean FIELD_ORIENTED_ENABLED = true;
 
         public static final IdleMode DRIVE_IDLE_MODE = IdleMode.kBrake;
         public static final IdleMode ANGLE_IDLE_MODE = IdleMode.kCoast;
@@ -96,7 +96,7 @@ public final class Constants {
 
         public static final double START_POS = toNewRange(165, OLD_LIMITS, ROTATE_LIMITS);// 140;
         public static final double LOW_POS = toNewRange(136, OLD_LIMITS, ROTATE_LIMITS);// 140;
-        public static final double MID_POS = toNewRange(64 + 10, OLD_LIMITS, ROTATE_LIMITS);// 72;
+        public static final double MID_POS = toNewRange(74, OLD_LIMITS, ROTATE_LIMITS);// 72;
         public static final double LOADING_POS = toNewRange(79, OLD_LIMITS, ROTATE_LIMITS);// 75;
         public static final double HIGH_POS = toNewRange(100, OLD_LIMITS, ROTATE_LIMITS);// 72;
 
@@ -137,7 +137,7 @@ public final class Constants {
 
         public static final double START_POS_MIN_CARRIAGE = toNewRange(1790, CarriageConstants.OLD_LIMITS,
                 CarriageConstants.CARRIAGE_LIMITS);// 1790;
-        public static final double LOW_POS_MIN_CARRIAGE = toNewRange(2159 + 1000, CarriageConstants.OLD_LIMITS,
+        public static final double LOW_POS_MIN_CARRIAGE = toNewRange(3159, CarriageConstants.OLD_LIMITS,
                 CarriageConstants.CARRIAGE_LIMITS);// 2159;
         public static final double MID_POS_MIN_CARRIAGE = toNewRange(1790, CarriageConstants.OLD_LIMITS,
                 CarriageConstants.CARRIAGE_LIMITS);// 1790;
@@ -174,7 +174,7 @@ public final class Constants {
     public static class ElevatorConstants {
         public static final int ELEVATOR_MOTOR_ID = 16;
         public static final Range OLD_LIMITS = new Range(135, 300);
-        public static final Range ELEVATOR_LIMITS = new Range(100, 274); // end is the bottom most and start is
+        public static final Range ELEVATOR_LIMITS = new Range(160, 330); // end is the bottom most and start is
                                                                          // the top most
         public static final int ABS_ENCODER_ROTATION_ID = 9;
 
@@ -240,6 +240,5 @@ public final class Constants {
     public static double toNewRange(double oldVal, Range oldRange, Range newRange) {
         double conversion = (newRange.end() - newRange.start()) / (oldRange.end() - oldRange.start());
         return ((oldVal - oldRange.start()) * conversion) + newRange.start();
-
     }
 }
