@@ -62,6 +62,15 @@ public final class Constants {
 
         public static final double AUTO_SLEW_RATE = 1;
         public static final double AUTO_SLEW_ROTATE_VAL = 1;
+
+        public record XboxSpeeds(
+                double drive,
+                double wristElbow,
+                double elevator,
+                double carriage) {
+            public static final XboxSpeeds COMPETITION = new XboxSpeeds(1, 0.75, 0.5, 0.95);
+            public static final XboxSpeeds DEMO = new XboxSpeeds(0.3, 0.5, 0.25, 0.75);
+        }
     }
 
     public static class AutoConstants {

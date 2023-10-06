@@ -14,6 +14,7 @@ import org.assabet.aztechs157.numbers.Range;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import frc.robot.Constants.DriveConstants.XboxSpeeds;
 
 public class DriverInputs extends DynamicLayout {
     public static final Axis.Key intakeSpeed = new Axis.Key("Intake Speed");
@@ -43,10 +44,10 @@ public class DriverInputs extends DynamicLayout {
 
     public static DriverInputs createFromChooser() {
         final SendableChooser<Layout> chooser = new SendableChooser<>();
-        chooser.setDefaultOption("xbox", doubleXBOXLayout());
+        chooser.setDefaultOption("xbox", doubleXBOXLayout(XboxSpeeds.COMPETITION));
         chooser.addOption("logitech", dualLogitechLayout());
         chooser.addOption("flight", flightStickLayout());
-        chooser.addOption("demo", demoLayout());
+        chooser.addOption("demo", doubleXBOXLayout(XboxSpeeds.DEMO));
         Shuffleboard.getTab("Driver").add("Layout Choose", chooser);
 
         return new DriverInputs(chooser);
@@ -142,18 +143,16 @@ public class DriverInputs extends DynamicLayout {
         return layout;
     }
 
-    private static Layout doubleXBOXLayout() {
+    private static Layout doubleXBOXLayout(final XboxSpeeds speeds) {
         final var layout = new MapLayout("driver xbox, operator xbox");
         final var driver = new XboxOne(0);
         final var operator = new XboxOne(1);
-
-        final var speedModifier = 1;
 
         final Deadzone xboxDeadzone = Deadzone.forAxis(new Range(-0.1, 0.1));
 
-        layout.assign(driveSpeedX, driver.leftStickX.map(xboxDeadzone::apply).scaledBy(speedModifier));
-        layout.assign(driveSpeedY, driver.leftStickY.map(xboxDeadzone::apply).scaledBy(speedModifier));
-        layout.assign(driveRotation, driver.rightStickX.map(xboxDeadzone::apply).scaledBy(speedModifier)
+        layout.assign(driveSpeedX, driver.leftStickX.map(xboxDeadzone::apply).scaledBy(speeds.drive()));
+        layout.assign(driveSpeedY, driver.leftStickY.map(xboxDeadzone::apply).scaledBy(speeds.drive()));
+        layout.assign(driveRotation, driver.rightStickX.map(xboxDeadzone::apply).scaledBy(speeds.drive())
                 .scaledBy(maxRotationPerSecond.getDegrees()));
         layout.assign(autoBalance, driver.a);
         layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
@@ -175,51 +174,13 @@ public class DriverInputs extends DynamicLayout {
         layout.assign(loadingPosition, operator.b);
         layout.assign(startPosition, operator.start);
 
-        layout.assign(rotateWrist, operator.rightStickY.map(xboxDeadzone::apply).scaledBy(-0.75));
-        layout.assign(rotateElbow, operator.leftStickY.map(xboxDeadzone::apply).scaledBy(-0.75));
+        layout.assign(rotateWrist,
+                operator.rightStickY.map(xboxDeadzone::apply).scaledBy(speeds.wristElbow()).inverted());
+        layout.assign(rotateElbow,
+                operator.leftStickY.map(xboxDeadzone::apply).scaledBy(speeds.wristElbow()).inverted());
 
-        layout.assign(elevator, operator.pov.y.scaledBy(-0.50));
-        layout.assign(carriage, operator.pov.x.scaledBy(0.95));
-
-        return layout;
-    }
-
-    private static Layout demoLayout() {
-        final var layout = new MapLayout("driver xbox, operator xbox");
-        final var driver = new XboxOne(0);
-        final var operator = new XboxOne(1);
-
-        final var speedModifier = 0.3;
-
-        layout.assign(driveSpeedX, driver.leftStickX.map(deadzone::apply).scaledBy(speedModifier));
-        layout.assign(driveSpeedY, driver.leftStickY.map(deadzone::apply).scaledBy(speedModifier));
-        layout.assign(driveRotation, driver.rightStickX.map(deadzone::apply).scaledBy(speedModifier)
-                .scaledBy(maxRotationPerSecond.getDegrees()));
-        layout.assign(autoBalance, driver.a);
-        layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
-            if (Math.abs(operator.combinedTriggersHeld.get()) > Math.abs(driver.combinedTriggersHeld.get())) {
-                return operator.combinedTriggersHeld.get();
-            }
-            return driver.combinedTriggersHeld.get();
-        }));
-        layout.assign(ConeIntake, driver.rightBumper);
-        layout.assign(cubeIntake, driver.leftBumper);
-
-        layout.assign(runIntakeMotorIn, operator.rightTriggerHeld.scaledBy(.1));
-        layout.assign(runIntakeMotorOut, operator.leftTriggerHeld.scaledBy(.1));
-        layout.assign(setIntakeSolenoidForward, operator.rightBumper);
-        layout.assign(setIntakeSolenoidBackward, operator.leftBumper);
-        layout.assign(lowPosition, operator.x);
-        layout.assign(midPosition, operator.a);
-        layout.assign(highPosition, operator.y);
-        layout.assign(loadingPosition, operator.b);
-        layout.assign(startPosition, operator.start);
-
-        layout.assign(rotateWrist, operator.rightStickY.map(deadzone::apply).scaledBy(-0.5));
-        layout.assign(rotateElbow, operator.leftStickY.map(deadzone::apply).scaledBy(-0.5));
-
-        layout.assign(elevator, operator.pov.y.scaledBy(-0.25));
-        layout.assign(carriage, operator.pov.x.scaledBy(0.75));
+        layout.assign(elevator, operator.pov.y.scaledBy(speeds.elevator()).inverted());
+        layout.assign(carriage, operator.pov.x.scaledBy(speeds.carriage()));
 
         return layout;
     }
