@@ -65,11 +65,12 @@ public final class Constants {
 
         public record XboxSpeeds(
                 double drive,
+                double slowDrive,
                 double wristElbow,
                 double elevator,
                 double carriage) {
-            public static final XboxSpeeds COMPETITION = new XboxSpeeds(1, 0.75, 0.5, 0.95);
-            public static final XboxSpeeds DEMO = new XboxSpeeds(0.3, 0.5, 0.25, 0.75);
+            public static final XboxSpeeds COMPETITION = new XboxSpeeds(1, 0.5, 0.75, 0.5, 0.95);
+            public static final XboxSpeeds DEMO = new XboxSpeeds(0.3, 0.3, 0.5, 0.25, 0.75);
         }
     }
 

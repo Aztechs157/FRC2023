@@ -2,6 +2,9 @@ package frc.robot.input;
 
 import org.assabet.aztechs157.input.layouts.Layout;
 import org.assabet.aztechs157.input.layouts.MapLayout;
+
+import java.util.function.DoubleSupplier;
+
 import org.assabet.aztechs157.input.layouts.DynamicLayout;
 import org.assabet.aztechs157.input.models.LogitechExtreme3D;
 import org.assabet.aztechs157.input.models.LogitechGamepadF310;
@@ -12,8 +15,10 @@ import org.assabet.aztechs157.numbers.Deadzone;
 import org.assabet.aztechs157.numbers.Range;
 
 import edu.wpi.first.math.geometry.Rotation2d;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DriveConstants.XboxSpeeds;
 
 public class DriverInputs extends DynamicLayout {
@@ -150,9 +155,16 @@ public class DriverInputs extends DynamicLayout {
 
         final Deadzone xboxDeadzone = Deadzone.forAxis(new Range(-0.1, 0.1));
 
-        layout.assign(driveSpeedX, driver.leftStickX.map(xboxDeadzone::apply).scaledBy(speeds.drive()));
-        layout.assign(driveSpeedY, driver.leftStickY.map(xboxDeadzone::apply).scaledBy(speeds.drive()));
-        layout.assign(driveRotation, driver.rightStickX.map(xboxDeadzone::apply).scaledBy(speeds.drive())
+        final DoubleSupplier driveSpeed = () -> {
+            if (driver.rightStickPress.get()) {
+                return speeds.slowDrive();
+            }
+            return speeds.drive();
+        };
+
+        layout.assign(driveSpeedX, driver.leftStickX.map(xboxDeadzone::apply).scaledBy(driveSpeed));
+        layout.assign(driveSpeedY, driver.leftStickY.map(xboxDeadzone::apply).scaledBy(driveSpeed));
+        layout.assign(driveRotation, driver.rightStickX.map(xboxDeadzone::apply).scaledBy(driveSpeed)
                 .scaledBy(maxRotationPerSecond.getDegrees()));
         layout.assign(autoBalance, driver.a);
         layout.assign(intakeSpeed, new Axis("Operator and driver triggers", () -> {
