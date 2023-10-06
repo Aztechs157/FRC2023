@@ -1,155 +1,156 @@
 {
-  "NetworkTables": {
-    "Retained Values": {
-      "open": false
-    },
-    "persistent": {
-      "157": {
-        "Drive": {
-          "open": true
+    "NetworkTables": {
+        "Retained Values": {
+            "open": false
         },
-        "open": true
-      }
-    },
-    "transitory": {
-      "157": {
-        "Arm": {
-          "Test1": {
-            "open": true
-          },
-          "open": true
-        },
-        "Carriage": {
-          "open": true
-        },
-        "Drive": {
-          "open": true
-        },
-        "Elbow": {
-          "open": true
-        },
-        "Elevator": {
-          "open": true
-        },
-        "Swerve": {
-          "Pod 1": {
-            "open": true
-          },
-          "Pod 2": {
-            "open": true
-          },
-          "Pod 3": {
-            "open": true
-          },
-          "Pod 4": {
-            "open": true
-          },
-          "SinglePod": {
-            "open": true
-          }
-        },
-        "open": true
-      },
-      "FMSInfo": {
-        "open": true
-      },
-      "LiveWindow": {
-        ".status": {
-          "open": true
-        },
-        "open": true
-      },
-      "Shuffleboard": {
-        "Joesph": {
-          "open": true
-        },
-        "open": true
-      },
-      "SmartDashboard": {
-        "Reset Gyro": {
-          "open": true
-        },
-        "Reset Yaw": {
-          "open": true
-        },
-        "open": true
-      }
-    },
-    "types": {
-      "/FMSInfo": "FMSInfo",
-      "/Shuffleboard/Driver/Auto Choose": "String Chooser",
-      "/SmartDashboard/Reset Gyro": "Command",
-      "/SmartDashboard/Reset Yaw": "Command"
-    },
-    "windows": {
-      "/SmartDashboard/Reset Yaw": {
-        "window": {
-          "visible": true
-        }
-      }
-    }
-  },
-  "NetworkTables Settings": {
-    "mode": "Client (NT4)",
-    "serverTeam": "157",
-    "visible": false
-  },
-  "Plots": {
-    "Plot <0>": {
-      "plots": [
-        {
-          "axis": [
-            {
-              "autoFit": true
+        "persistent": {
+            "157": {
+                "Drive": {
+                    "open": true
+                },
+                "open": true
             }
-          ],
-          "height": 332,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:/Shuffleboard/Joesph/Encoder"
-            }
-          ]
-        }
-      ],
-      "window": {
-        "visible": false
-      }
-    },
-    "Plot <1>": {
-      "plots": [
-        {
-          "height": 332,
-          "series": [
-            {
-              "color": [
-                0.2980392277240753,
-                0.44705885648727417,
-                0.6901960968971252,
-                1.0
-              ],
-              "id": "NT:157/dumbEncoder"
+        },
+        "transitory": {
+            "157": {
+                "Arm": {
+                    "Test1": {
+                        "open": true
+                    },
+                    "open": true
+                },
+                "Carriage": {
+                    "open": true
+                },
+                "Drive": {
+                    "open": true
+                },
+                "Elbow": {
+                    "open": true
+                },
+                "Elevator": {
+                    "open": true
+                },
+                "Swerve": {
+                    "Pod 1": {
+                        "open": true
+                    },
+                    "Pod 2": {
+                        "open": true
+                    },
+                    "Pod 3": {
+                        "open": true
+                    },
+                    "Pod 4": {
+                        "open": true
+                    },
+                    "SinglePod": {
+                        "open": true
+                    }
+                },
+                "open": true
             },
-            {
-              "color": [
-                0.8666667342185974,
-                0.5176470875740051,
-                0.32156863808631897,
-                1.0
-              ],
-              "id": "NT:/157/Swerve/SinglePod/Input Angle"
+            "FMSInfo": {
+                "open": true
+            },
+            "LiveWindow": {
+                ".status": {
+                    "open": true
+                },
+                "open": true
+            },
+            "Shuffleboard": {
+                "Joesph": {
+                    "open": true
+                },
+                "open": true
+            },
+            "SmartDashboard": {
+                "Reset Gyro": {
+                    "open": true
+                },
+                "Reset Yaw": {
+                    "open": true
+                },
+                "open": true
             }
-          ]
+        },
+        "types": {
+            "/FMSInfo": "FMSInfo",
+            "/Shuffleboard/Driver/Auto Choose": "String Chooser",
+            "/Shuffleboard/Driver/Layout Choose": "String",
+            "/SmartDashboard/Reset Gyro": "Command",
+            "/SmartDashboard/Reset Yaw": "Command"
+        },
+        "windows": {
+            "/SmartDashboard/Reset Yaw": {
+                "window": {
+                    "visible": true
+                }
+            }
         }
-      ],
-      "window": {
+    },
+    "NetworkTables Settings": {
+        "mode": "Client (NT4)",
+        "serverTeam": "157",
         "visible": false
-      }
+    },
+    "Plots": {
+        "Plot <0>": {
+            "plots": [
+                {
+                    "axis": [
+                        {
+                            "autoFit": true
+                        }
+                    ],
+                    "height": 332,
+                    "series": [
+                        {
+                            "color": [
+                                0.2980392277240753,
+                                0.44705885648727417,
+                                0.6901960968971252,
+                                1.0
+                            ],
+                            "id": "NT:/Shuffleboard/Joesph/Encoder"
+                        }
+                    ]
+                }
+            ],
+            "window": {
+                "visible": false
+            }
+        },
+        "Plot <1>": {
+            "plots": [
+                {
+                    "height": 332,
+                    "series": [
+                        {
+                            "color": [
+                                0.2980392277240753,
+                                0.44705885648727417,
+                                0.6901960968971252,
+                                1.0
+                            ],
+                            "id": "NT:157/dumbEncoder"
+                        },
+                        {
+                            "color": [
+                                0.8666667342185974,
+                                0.5176470875740051,
+                                0.32156863808631897,
+                                1.0
+                            ],
+                            "id": "NT:/157/Swerve/SinglePod/Input Angle"
+                        }
+                    ]
+                }
+            ],
+            "window": {
+                "visible": false
+            }
+        }
     }
-  }
 }

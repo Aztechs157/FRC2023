@@ -154,7 +154,6 @@ public class ElbowSubsystem extends SubsystemBase {
                     if (elevatorPosition > ElbowConstants.SAFETY_ELEVATOR_LIMIT_HIGH
                             || elbowPosition < this.elbowPosition) {
                         s = this.slew.calculate(this.elbowUpPid.calculate(elbowPosition, this.elbowPosition));
-                        System.out.println(s);
                     }
                     break;
                 default:
