@@ -46,7 +46,7 @@ public class IntakeSubsystem extends SubsystemBase {
         Command x = runOnce(() -> {
             lights.setClimb(Color.kGold, Color.kBlack, 3, 2, 2);
             setSolenoid(Value.kForward);
-            stoppedSpeed = 0.25;
+            stoppedSpeed = 0.5;
         }).andThen(runIntake(inputs).until(this::getSensor)).andThen(runOnce(() -> {
             setSolenoid(Value.kReverse);
             lights.setSolid(Color.kGold);
@@ -60,7 +60,7 @@ public class IntakeSubsystem extends SubsystemBase {
         Command x = runOnce(() -> {
             lights.setClimb(Color.kPurple, Color.kBlack, 3, 2, 2);
             setSolenoid(Value.kForward);
-            stoppedSpeed = 0.25;
+            stoppedSpeed = 0.5;
         }).andThen(runIntake(inputs).until(this::getSensor)).andThen(runOnce(() -> {
             lights.setSolid(Color.kPurple);
             stoppedSpeed = 0;
