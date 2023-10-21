@@ -15,10 +15,8 @@ import org.assabet.aztechs157.numbers.Deadzone;
 import org.assabet.aztechs157.numbers.Range;
 
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.shuffleboard.Shuffleboard;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
-import edu.wpi.first.wpilibj2.command.InstantCommand;
 import frc.robot.Constants.DriveConstants.XboxSpeeds;
 
 public class DriverInputs extends DynamicLayout {
