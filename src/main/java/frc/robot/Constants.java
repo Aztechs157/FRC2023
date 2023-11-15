@@ -101,6 +101,8 @@ public final class Constants {
     public static class WristConstants {
         public static final int ABS_ENCODER_ROTATION_ID = 2;
         public static final int MOTOR_ID = 14;
+        public static final IdleMode WRIST_IDLE_MODE = IdleMode.kBrake;
+
         public static final Range OLD_LIMITS = new Range(36, 179);
         public static final Range ROTATE_LIMITS = new Range(36, 179); // 280 is full max
 
@@ -135,6 +137,7 @@ public final class Constants {
         public static final int ABS_ENCODER_ROTATION_ID = 1;
         public static final int MOTOR_ID = 15;
         public static final int SERVO_ID = 1;
+        public static final IdleMode ELBOW_IDLE_MODE = IdleMode.kBrake;
 
         public static final Range OLD_LIMITS = new Range(60, 230);
         public static final Range ROTATE_LIMITS = new Range(205, 280); // 162 fully down, 336 fully up
@@ -183,9 +186,11 @@ public final class Constants {
 
     public static class ElevatorConstants {
         public static final int ELEVATOR_MOTOR_ID = 16;
+        public static final IdleMode ELEVATOR_IDLE_MODE = IdleMode.kBrake;
+
         public static final Range OLD_LIMITS = new Range(135, 300);
-        public static final Range ELEVATOR_LIMITS = new Range(80, 255); // end is the bottom most and start is
-                                                                        // the top most
+        public static final Range ELEVATOR_LIMITS = new Range(150, 325); // end is the bottom most and start is
+                                                                         // the top most
         public static final int ABS_ENCODER_ROTATION_ID = 9;
 
         public static final double START_POS = toNewRange(95, OLD_LIMITS, ELEVATOR_LIMITS); // toNewRange(1675,
@@ -225,9 +230,11 @@ public final class Constants {
 
     public static class CarriageConstants {
         public static final int CARRIAGE_MOTOR_ID = 17;
-        public static final Range OLD_LIMITS = new Range(2015, 3350);
-        public static final Range CARRIAGE_LIMITS = new Range(2800, 3830);
         public static final int CARRIAGE_ANALOG_ID = 0;
+        public static final IdleMode CARRIAGE_IDLE_MODE = IdleMode.kBrake;
+
+        public static final Range OLD_LIMITS = new Range(2015, 3350);
+        public static final Range CARRIAGE_LIMITS = new Range(2840, 3970);
 
         public static final double START_POS = toNewRange(2165, OLD_LIMITS, CARRIAGE_LIMITS);// 2015;
         public static final double LOW_POS = toNewRange(3430, OLD_LIMITS, CARRIAGE_LIMITS);// 3350;

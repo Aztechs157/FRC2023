@@ -33,7 +33,7 @@ public class ElevatorSubsystem extends SubsystemBase {
 
     /** Creates a new ElevatorSubsystem. */
     public ElevatorSubsystem() {
-        elevatorMotor.setIdleMode(IdleMode.kBrake);
+        elevatorMotor.setIdleMode(ElevatorConstants.ELEVATOR_IDLE_MODE);
         elevatorAbsEncoder.setSemiPeriodMode(true);
         elevatorAbsEncoder.setUpSource(ElevatorConstants.ABS_ENCODER_ROTATION_ID);
         elevatorAbsEncoder.reset();

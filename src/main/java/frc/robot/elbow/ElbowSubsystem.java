@@ -30,7 +30,7 @@ public class ElbowSubsystem extends SubsystemBase {
 
     public ElbowSubsystem() {
         elbowMotor.setInverted(true);
-        elbowMotor.setIdleMode(IdleMode.kBrake);
+        elbowMotor.setIdleMode(ElbowConstants.ELBOW_IDLE_MODE);
         final var tab = Shuffleboard.getTab("Encoder Debug");
         tab.addNumber("elbow position", this::getElbowRotationPosition);
         elbowAbsEncoder.setSemiPeriodMode(true);

@@ -30,7 +30,7 @@ public class WristSubsystem extends SubsystemBase {
 
     public WristSubsystem() {
         wristMotor.setInverted(true);
-        wristMotor.setIdleMode(IdleMode.kBrake);
+        wristMotor.setIdleMode(WristConstants.WRIST_IDLE_MODE);
         wristAbsEncoder.setSemiPeriodMode(true);
         wristAbsEncoder.setUpSource(WristConstants.ABS_ENCODER_ROTATION_ID);
         wristAbsEncoder.reset();

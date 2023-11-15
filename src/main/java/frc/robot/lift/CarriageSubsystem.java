@@ -26,7 +26,7 @@ public class CarriageSubsystem extends SubsystemBase {
 
     /** Creates a new CarriageSubsystem. */
     public CarriageSubsystem() {
-        carriageMotor.setIdleMode(IdleMode.kBrake);
+        carriageMotor.setIdleMode(CarriageConstants.CARRIAGE_IDLE_MODE);
     }
 
     public Command runCarriage(final DriverInputs inputs) {
