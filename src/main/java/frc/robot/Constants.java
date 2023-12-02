@@ -189,8 +189,8 @@ public final class Constants {
         public static final IdleMode ELEVATOR_IDLE_MODE = IdleMode.kBrake;
 
         public static final Range OLD_LIMITS = new Range(135, 300);
-        public static final Range ELEVATOR_LIMITS = new Range(150, 325); // end is the bottom most and start is
-                                                                         // the top most
+        public static final Range ELEVATOR_LIMITS = new Range(75, 242); // end is the bottom most and start is
+                                                                        // the top most
         public static final int ABS_ENCODER_ROTATION_ID = 9;
 
         public static final double START_POS = toNewRange(95, OLD_LIMITS, ELEVATOR_LIMITS); // toNewRange(1675,
